@@ -54,5 +54,5 @@ def _pip_uninstall(names):
     return subprocess.Popen(args)
 
 
-if __name__ == '__main__':  # pragma: no cover
+if __name__ == '__main__':  # pragma: no cover, manual test
     install(sys.argv[1:])

@@ -46,5 +46,5 @@ class TestInstall(unittest.TestCase):  # pylint: disable=R0904
         self.assertTrue(installer.uninstall(['testpackage']))
 
 
-if __name__ == '__main__':  # pragma: no cover
+if __name__ == '__main__':  # pragma: no cover, manual test
     unittest.main()

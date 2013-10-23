@@ -6,6 +6,7 @@ Bootstaps package management for an existing Python 2 or 3 installation.
 
 import os
 import sys
+import tempfile
 import subprocess
 
 PY3 = (sys.version_info[0] == 3)
@@ -26,6 +27,10 @@ GTK_URL = r"http://ftp.gnome.org/pub/GNOME/binaries/win32/pygtk/2.24/pygtk-all-i
 
 def main():
     """Install pip, virtualenv, and other essential packages."""
+
+    # Create a temporary directory
+    temp = tempfile.gettempdir()
+    os.chdir(temp)
 
     # Install setuptools from source
     script = 'ez_setup.py'
@@ -51,9 +56,15 @@ def main():
     subprocess.call([gtk])
     os.remove(gtk)
 
+    # Delete the temporary directory
 
-def download(url, path):
+
+
+def download(url, path=None):
     """Download a file from the URL to a local path."""
+
+    if path is None:
+        path = url.rsplit('/')[-1]
 
     if PY3:
         import urllib.request
@@ -73,5 +84,5 @@ def install(*names):
     subprocess.call([PIP, 'install', '--upgrade'] + list(names))
 
 
-if __name__ == '__main__':
+if __name__ == '__main__':  # pragma: no cover
     main()

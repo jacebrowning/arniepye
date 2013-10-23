@@ -36,5 +36,5 @@ class TestRun(unittest.TestCase):  # pylint: disable=R0904
             self.assertFalse(server.run())
 
 
-if __name__ == '__main__':  # pragma: no cover
+if __name__ == '__main__':  # pragma: no cover, manual test
     unittest.main()

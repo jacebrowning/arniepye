@@ -63,5 +63,5 @@ def _teardown(path, remove=False):
         shutil.rmtree(path)
 
 
-if __name__ == '__main__':  # pragma: no cover
+if __name__ == '__main__':  # pragma: no cover, manual test
     run(forever=False, temp=True)

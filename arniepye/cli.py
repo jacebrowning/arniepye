@@ -11,9 +11,7 @@ import logging
 
 from arniepye import CLI, VERSION
 from arniepye import settings
-from arniepye.main import install
-from arniepye.main import uninstall
-from arniepye.main import serve
+from arniepye import main as _main
 
 
 class _HelpFormatter(argparse.HelpFormatter):
@@ -34,10 +32,12 @@ class _WarningFormatter(logging.Formatter, object):
 
     def format(self, record):
         if record.levelno > logging.INFO:
-            self._fmt = self.verbose_format
+            self._fmt = self.verbose_format  # Python 2
+            self._style._fmt = self.verbose_format  # Python 3
         else:
-            self._fmt = self.default_format
-        return super().format(record)
+            self._fmt = self.default_format  # Python 2
+            self._style._fmt = self.default_format  # Python 3
+        return super(_WarningFormatter, self).format(record)
 
 
 def main(args=None):
@@ -128,7 +128,7 @@ def _run_install(args, cwd, error):
     @param cwd: current working directory
     @param error: function to call for CLI errors
     """
-    return install(args.name)
+    return _main.install(args.name)
 
 
 def _run_uninstall(args, cwd, error):
@@ -137,7 +137,7 @@ def _run_uninstall(args, cwd, error):
     @param cwd: current working directory
     @param error: function to call for CLI errors
     """
-    return uninstall(args.name)
+    return _main.uninstall(args.name)
 
 
 def _run_serve(args, cwd, error):
@@ -146,8 +146,8 @@ def _run_serve(args, cwd, error):
     @param cwd: current working directory
     @param error: function to call for CLI errors
     """
-    return serve(forever=not args.test, temp=args.temp)
+    return _main.serve(forever=not args.test, temp=args.temp)
 
 
-if __name__ == '__main__':  # pragma: no cover
+if __name__ == '__main__':  # pragma: no cover, manual test
     main()
