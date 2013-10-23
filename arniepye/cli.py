@@ -69,8 +69,6 @@ def main(args=None):
     # Server subparser
     sub = subs.add_parser('serve', formatter_class=_HelpFormatter,
                           parents=[debug], help="start a PyPI package server")
-    sub.add_argument('--launch', action='store_true',
-                     help="launch the server web interface")
     sub.add_argument('--temp', action='store_true',
                      help="remove all packages and temporary files on exit")
     sub.add_argument('--test', action='store_true',
@@ -146,7 +144,7 @@ def _run_serve(args, cwd, error):
     @param cwd: current working directory
     @param error: function to call for CLI errors
     """
-    return serve(launch=args.launch, forever=not args.test, temp=args.temp)
+    return serve(forever=not args.test, temp=args.temp)
 
 
 if __name__ == '__main__':  # pragma: no cover

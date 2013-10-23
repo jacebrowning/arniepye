@@ -12,15 +12,16 @@ import logging
 
 from arniepye import settings
 
+FILES = os.path.join(os.path.dirname(__file__), 'files')
 
-def run(port=8080, path=settings.PACKAGES_DIR, launch=False, forever=True, temp=False):
+
+def run(port=8080, path=settings.PACKAGES_DIR, forever=True, temp=False):
     """Create a packages directory and run the server forever.
     """
+    # Create the server files
+    _setup(path)
 
-    if not os.path.isdir(path):
-        logging.info("creating packages directory at '{}'...".format(path))
-        os.mkdir(path)
-
+    # Start PyPI
     logging.debug("creating the pypi process...")
     process = subprocess.Popen([sys.executable, '-m', 'pypiserver',
                                 '-p', str(port), path])
@@ -33,12 +34,27 @@ def run(port=8080, path=settings.PACKAGES_DIR, launch=False, forever=True, temp=
         return False
     finally:
         process.terminate()
-        if temp or not os.listdir(path):
-            logging.info("removing packages directory...")
-            shutil.rmtree(path)
+        _teardown(path, remove=temp)  # clean up the server files
         logging.debug("pypi server stopped")
 
     return True
+
+
+def _setup(path):
+    """Set up the packages directory."""
+    if not os.path.isdir(path):
+        logging.info("creating packages directory at '{}'...".format(path))
+        os.mkdir(path)
+    bootstrap = os.path.join(path, 'bootstrap')
+    shutil.rmtree(bootstrap, ignore_errors=True)
+    shutil.copytree(FILES, bootstrap)
+
+
+def _teardown(path, remove=False):
+    """Tear down the packages directory if specified."""
+    if remove or len(os.listdir(path)) <= 1:  # ignore 'bootstrap' folder
+        logging.info("removing packages directory...")
+        shutil.rmtree(path)
 
 
 if __name__ == '__main__':  # pragma: no cover
