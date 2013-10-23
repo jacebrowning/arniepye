@@ -30,5 +30,6 @@ setuptools.setup(
     long_description=open('README.rst').read(),
     license='TBD',  # TODO: determine DornerWorks license
 
-    install_requires=["pypiserver==1.1.3", "pip==1.4.1"],
+    install_requires=["pypiserver==1.1.3", "pip==1.4.1",
+                      "mock"],
 )

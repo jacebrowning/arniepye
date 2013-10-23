@@ -37,7 +37,6 @@ class TestCLI(unittest.TestCase):  # pylint: disable=R0904
         self.assertRaises(NotImplementedError, main, ['install', 'testpackage'])
         self.assertRaises(NotImplementedError, main, ['uninstall', 'testpackage'])
 
-    # TODO: update test when functionality exists
     def test_serve(self):
         """Verify the server CLI can be called."""
-        self.assertRaises(NotImplementedError, main, ['serve', '--test'])
+        self.assertIs(None, main(['serve', '--test']))

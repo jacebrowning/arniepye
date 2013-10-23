@@ -11,6 +11,7 @@ import logging
 
 from arniepye import CLI, VERSION
 from arniepye import settings
+from arniepye.main import serve
 
 
 class _HelpFormatter(argparse.HelpFormatter):
@@ -41,12 +42,16 @@ def main(args=None):
 
     @param args: manually override arguments
     """
+    # Debug parser
+    debug = argparse.ArgumentParser(add_help=False)
+    debug.add_argument('-V', '--version', action='version', version=VERSION)
+    debug.add_argument('-v', '--verbose', action='count', default=0,
+                        help="enable verbose logging")
+
     # Main parser
     parser = argparse.ArgumentParser(prog=CLI, description=__doc__,
-                                     formatter_class=_HelpFormatter)
-    parser.add_argument('-V', '--version', action='version', version=VERSION)
-    parser.add_argument('-v', '--verbose', action='count', default=0,
-                        help="enable verbose logging")
+                                     formatter_class=_HelpFormatter,
+                                     parents=[debug])
     subs = parser.add_subparsers(help="", dest='command', metavar="<command>")
 
     # Installer subparser
@@ -57,13 +62,15 @@ def main(args=None):
 
     # Uninstaller subparser
     sub = subs.add_parser('uninstall', formatter_class=_HelpFormatter,
-                          help="uninstall Python packages")
+                          parents=[debug], help="uninstall Python packages")
     sub.add_argument('name', nargs='+',
                      help="project names to install")
 
     # Server subparser
     sub = subs.add_parser('serve', formatter_class=_HelpFormatter,
-                          help="start a PyPI package server")
+                          parents=[debug], help="start a PyPI package server")
+    sub.add_argument('--launch', action='store_true',
+                     help="launch the server web interface")
     sub.add_argument('--temp', action='store_true',
                      help="remove all packages and temporary files on exit")
     sub.add_argument('--test', action='store_true',
@@ -84,7 +91,7 @@ def main(args=None):
     try:
         success = function(args, os.getcwd(), parser.error)
     except KeyboardInterrupt:
-        logging.debug("cancelled manually")
+        logging.debug("manually terminated")
         success = False
     if not success:
         sys.exit(1)
@@ -139,9 +146,8 @@ def _run_serve(args, cwd, error):
     @param cwd: current working directory
     @param error: function to call for CLI errors
     """
-    logging.warning((args, cwd, error))
-    raise NotImplementedError("'serve' not implemented")
+    return serve(launch=args.launch, forever=not args.test, temp=args.temp)
 
 
-if __name__ == '__main__':
+if __name__ == '__main__':  # pragma: no cover
     main()
