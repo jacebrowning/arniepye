@@ -64,8 +64,10 @@ def main(args=None):
     # Server subparser
     sub = subs.add_parser('serve', formatter_class=_HelpFormatter,
                           help="start a PyPI package server")
-    sub.add_argument('-t', '--temp', action='store_true',
+    sub.add_argument('--temp', action='store_true',
                      help="remove all packages and temporary files on exit")
+    sub.add_argument('--test', action='store_true',
+                     help="stop the server once it's started")
 
     # Parse arguments
     args = parser.parse_args(args=args)
