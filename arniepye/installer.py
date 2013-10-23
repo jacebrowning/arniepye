@@ -8,6 +8,12 @@ import sys
 import subprocess
 import logging
 
+import requests
+
+from arniepye import settings
+
+URL = None
+
 
 def install(names, reverse=False):
     """Install Python packages using PIP.
@@ -42,9 +48,29 @@ def uninstall(names):
 
 def _pip_install(names):
     """Start and return a PIP install subprocess."""
-    args = [sys.executable, '-m', 'pip', 'install', '--upgrade'] + names
+
+    if URL is None:
+        _set_url()
+
+    args = [sys.executable, '-m', 'pip', 'install',
+            '--index-url', URL, '--upgrade'] + names
     logging.debug("$ {0}".format(' '.join(args)))
     return subprocess.Popen(args)
+
+
+def _set_url():
+    """Set the default PyPI server based on HTTP response."""
+    global URL
+    for URL in settings.URLS:
+        try:
+            request = requests.get(URL)
+            if request.status_code == 200:  # pragma: no cover, integration test
+                logging.debug("valid: {0}".format(URL))
+                break
+        except requests.exceptions.RequestException:
+            logging.debug("invalid: {0}".format(URL))
+    else:  # pragma: no cover, unit test only
+        logging.warning("no valid PyPI servers")
 
 
 def _pip_uninstall(names):

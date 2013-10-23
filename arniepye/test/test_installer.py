@@ -9,6 +9,8 @@ from mock import patch, Mock
 
 import subprocess
 
+import requests
+
 from arniepye import installer
 
 
@@ -21,6 +23,7 @@ class MockPopen(Mock):
         self.returncode = 0
 
 
+@patch('requests.get', Mock(side_effect=requests.exceptions.RequestException))
 class TestInstall(unittest.TestCase):  # pylint: disable=R0904
     """Unit tests for the install function."""  # pylint: disable=C0103,W0212
 

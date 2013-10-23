@@ -6,8 +6,10 @@ Bootstaps package management for an existing Python 2 or 3 installation.
 
 import os
 import sys
+import shutil
 import tempfile
 import subprocess
+import logging
 
 PY3 = (sys.version_info[0] == 3)
 
@@ -16,48 +18,47 @@ SCRIPTS = os.path.join(os.path.dirname(sys.executable), 'Scripts')
 if SCRIPTS.count('Scripts') > 1:  # inside a virtualenv
     SCRIPTS = os.path.dirname(SCRIPTS)
 
-SETUPTOOLS_URL = r"https://bitbucket.org/pypa/setuptools/raw/bootstrap/ez_setup.py"
+SETUPTOOLS_URL = "https://bitbucket.org/pypa/setuptools/raw/bootstrap/ez_setup.py"
 EASY_INSTALL = os.path.join(SCRIPTS, 'easy_install')
 
-PIP_URL = r"https://raw.github.com/pypa/pip/master/contrib/get-pip.py"
+PIP_URL = "https://raw.github.com/pypa/pip/master/contrib/get-pip.py"
 PIP = os.path.join(SCRIPTS, 'pip')
 
-GTK_URL = r"http://ftp.gnome.org/pub/GNOME/binaries/win32/pygtk/2.24/pygtk-all-in-one-2.24.0.win32-py2.7.msi"
+SERVER_URL = "http://DW-89.dw.local:8080/simple/"
+ARNIE = os.path.join(SCRIPTS, 'arnie3' if PY3 else 'arnie2')
+
+GTK_URL = "http://ftp.gnome.org/pub/GNOME/binaries/win32/pygtk/2.24/pygtk-all-in-one-2.24.0.win32-py2.7.msi"
 
 
 def main():
-    """Install pip, virtualenv, and other essential packages."""
+    """Install setuptools, pip, arniepye, and non-pip components."""
 
     # Create a temporary directory
-    temp = tempfile.gettempdir()
+    temp = tempfile.mkdtemp()
     os.chdir(temp)
 
     # Install setuptools from source
-    script = 'ez_setup.py'
-    download(SETUPTOOLS_URL, script)
-    subprocess.call([PYTHON, script])
-    os.remove(script)
+    script = download(SETUPTOOLS_URL)
+    python(script)
 
-    # Install pip from source
-    pip = 'install_pip.py'
-    download(PIP_URL, pip)
-    subprocess.call([PYTHON, pip])
-    os.remove(pip)
+    # Install pip using setuptools
+    easy_install('pip')
 
-    # Install virtualenv and other essential packages
-    install('virtualenv')
+    # Install ArniePye using pip
+    pip('ArniePye', url=SERVER_URL)
 
-    # Install other essential packages
-    install('pep8')  # TODO: add pylint when Windows Python 3 is supported
+    # Install virtualenv using ArniePye
+    arnie('virtualenv')
 
-    # Install the GTK+ buidle
-    gtk = 'install_gtk.exe'
-    download(GTK_URL, gtk)
-    subprocess.call([gtk])
-    os.remove(gtk)
+#     # Install the GTK+ buidle
+#     gtk = 'install_gtk.exe'
+#     download(GTK_URL, gtk)
+#     subprocess.call([gtk])
+#     os.remove(gtk)
 
     # Delete the temporary directory
-
+    os.chdir(os.path.dirname(temp))
+    shutil.rmtree(temp)
 
 
 def download(url, path=None):
@@ -65,6 +66,7 @@ def download(url, path=None):
 
     if path is None:
         path = url.rsplit('/')[-1]
+    logging.debug("downloading {0} to {1}...".format(url, path))
 
     if PY3:
         import urllib.request
@@ -78,11 +80,38 @@ def download(url, path=None):
     with open(path, 'wb') as outfile:
         outfile.write(data)
 
+    return path
 
-def install(*names):
-    """Install a Python packages using pip."""
-    subprocess.call([PIP, 'install', '--upgrade'] + list(names))
+
+def python(path):
+    """Run a script with Python."""
+    args = [PYTHON, path]
+    _call(args)
+
+
+def easy_install(*names):
+    """Install Python packages using easy_install."""
+    args = [EASY_INSTALL] + list(names)
+    _call(args)
+
+
+def pip(*names, url=None):
+    """Install Python packages using pip and a local server."""
+    args = [PIP, 'install', '--index-url', url, '--upgrade'] + list(names)
+    _call(args)
+
+
+def arnie(*names):
+    """Install Python packages using ArniePye."""
+    args = [ARNIE, 'install'] + list(names)
+    _call(args)
+
+
+def _call(args):
+    logging.debug("$ {0}".format(' '.join(args)))
+    subprocess.call(args)
 
 
 if __name__ == '__main__':  # pragma: no cover
+    logging.basicConfig(level=logging.DEBUG, format="%(message)s")
     main()

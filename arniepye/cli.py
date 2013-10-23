@@ -95,7 +95,6 @@ def main(args=None):
         logging.debug("manually terminated")
         success = False
     if not success:
-        logging.error("command failed")
         sys.exit(1)
 
 

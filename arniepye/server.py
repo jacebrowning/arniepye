@@ -41,7 +41,8 @@ def run(port=8080, path=settings.PACKAGES_DIR, forever=True, temp=False):
 
 def _pypiserver(port, path):
     """Start and return a pypiserver process."""
-    args = [sys.executable, '-m', 'pypiserver', '-p', str(port), path]
+    args = [sys.executable, '-m', 'pypiserver', '-p', str(port),
+            '-P', settings.HTACCESS, path]
     logging.debug("$ {0}".format(' '.join(args)))
     return subprocess.Popen(args)
 
@@ -54,6 +55,8 @@ def _setup(path):
     bootstrap = os.path.join(path, 'bootstrap')
     shutil.rmtree(bootstrap, ignore_errors=True)
     shutil.copytree(FILES, bootstrap)
+    htaccess = os.path.join(bootstrap, 'htaccess')
+    shutil.move(htaccess, os.path.expanduser(settings.HTACCESS))
 
 
 def _teardown(path, remove=False):

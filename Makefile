@@ -147,3 +147,16 @@ dist: .clean-dist
 .PHONY: upload
 upload: .clean-dist
 	$(PYTHON) setup.py register sdist upload
+
+# Demo #######################################################################
+
+.PHONY: demo
+demo: develop
+	- $(BIN)/arnie serve --temp &
+	- $(PYTHON) setup.py sdist upload -r local
+
+	- virtualenv env2
+	- env2/Scripts/python.exe arniepye/files/bootstrap.py
+
+	- @echo
+	- @echo Ctrl+C to stop the server...

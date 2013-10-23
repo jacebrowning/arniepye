@@ -8,10 +8,12 @@ import os
 import logging
 
 # Server settings
-SERVERS = [
-'DW-89',  # TODO: update with valid server names
+URLS = [  # TODO: update with a valid server URL
+'http://127.0.0.1:8080',
+'https://pypi.python.org/simple/',
 ]
 PACKAGES_DIR = os.path.expanduser("~/packages")
+HTACCESS = os.path.expanduser("~/.htaccess")
 
 
 # Logging settings
