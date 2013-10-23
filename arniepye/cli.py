@@ -11,13 +11,16 @@ import logging
 
 from arniepye import CLI, VERSION
 from arniepye import settings
+from arniepye.main import install
+from arniepye.main import uninstall
 from arniepye.main import serve
 
 
 class _HelpFormatter(argparse.HelpFormatter):
     """Command-line help text formatter with wider help text."""
     def __init__(self, *args, **kwargs):
-        super().__init__(*args, max_help_position=32, **kwargs)
+        super(_HelpFormatter, self).__init__(*args, max_help_position=32,
+                                             **kwargs)
 
 
 class _WarningFormatter(logging.Formatter, object):
@@ -25,7 +28,7 @@ class _WarningFormatter(logging.Formatter, object):
     format for logging level WARNING or higher."""
 
     def __init__(self, default_format, verbose_format, *args, **kwargs):
-        super().__init__(*args, **kwargs)
+        super(_WarningFormatter, self).__init__(*args, **kwargs)
         self.default_format = default_format
         self.verbose_format = verbose_format
 
@@ -56,13 +59,13 @@ def main(args=None):
 
     # Installer subparser
     sub = subs.add_parser('install', formatter_class=_HelpFormatter,
-                          help="install/upgrade Python packages")
+                          parents=[debug], help="install/upgrade packages")
     sub.add_argument('name', nargs='+',
                      help="project names to install")
 
     # Uninstaller subparser
     sub = subs.add_parser('uninstall', formatter_class=_HelpFormatter,
-                          parents=[debug], help="uninstall Python packages")
+                          parents=[debug], help="uninstall packages")
     sub.add_argument('name', nargs='+',
                      help="project names to install")
 
@@ -92,6 +95,7 @@ def main(args=None):
         logging.debug("manually terminated")
         success = False
     if not success:
+        logging.error("command failed")
         sys.exit(1)
 
 
@@ -124,8 +128,7 @@ def _run_install(args, cwd, error):
     @param cwd: current working directory
     @param error: function to call for CLI errors
     """
-    logging.warning((args, cwd, error))
-    raise NotImplementedError("'install' not implemented")
+    return install(args.name)
 
 
 def _run_uninstall(args, cwd, error):
@@ -134,8 +137,7 @@ def _run_uninstall(args, cwd, error):
     @param cwd: current working directory
     @param error: function to call for CLI errors
     """
-    logging.warning((args, cwd, error))
-    raise NotImplementedError("'uninstall' not implemented")
+    return uninstall(args.name)
 
 
 def _run_serve(args, cwd, error):

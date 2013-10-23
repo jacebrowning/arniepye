@@ -20,7 +20,7 @@ class TestRun(unittest.TestCase):  # pylint: disable=R0904
         self.assertTrue(server.run(forever=False))
 
     @patch('subprocess.Popen.poll', Mock(return_value=1))
-    def test_serve_exot(self):
+    def test_serve_exit(self):
         """Verify the server process can exit normally."""
         self.assertTrue(server.run())
 

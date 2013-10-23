@@ -23,8 +23,7 @@ def run(port=8080, path=settings.PACKAGES_DIR, forever=True, temp=False):
 
     # Start PyPI
     logging.debug("creating the pypi process...")
-    process = subprocess.Popen([sys.executable, '-m', 'pypiserver',
-                                '-p', str(port), path])
+    process = _pypiserver(port, path)
     try:
         logging.debug("pypi server started")
         while process.poll() is None and forever:
@@ -38,6 +37,13 @@ def run(port=8080, path=settings.PACKAGES_DIR, forever=True, temp=False):
         logging.debug("pypi server stopped")
 
     return True
+
+
+def _pypiserver(port, path):
+    """Start and return a pypiserver process."""
+    args = [sys.executable, '-m', 'pypiserver', '-p', str(port), path]
+    logging.debug("$ {0}".format(' '.join(args)))
+    return subprocess.Popen(args)
 
 
 def _setup(path):

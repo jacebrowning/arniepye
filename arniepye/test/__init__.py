@@ -31,11 +31,10 @@ class TestCLI(unittest.TestCase):  # pylint: disable=R0904
         """Verify an error occurs when no package specified to uninstall."""
         self.assertRaises(SystemExit, main, ['uninstall'])
 
-    # TODO: update test when functionality exists
     def test_install_uninstall(self):
         """Verify the install/uninstall CLI can be called."""
-        self.assertRaises(NotImplementedError, main, ['install', 'testpackage'])
-        self.assertRaises(NotImplementedError, main, ['uninstall', 'testpackage'])
+        self.assertIs(None, main(['install', 'testpackage']))
+        self.assertIs(None, main(['uninstall', 'testpackage']))
 
     def test_serve(self):
         """Verify the server CLI can be called."""
