@@ -152,11 +152,25 @@ upload: .clean-dist
 
 .PHONY: demo
 demo: develop
-	- $(BIN)/arnie serve --temp &
+
+	# Start a local PyPI server in the background
+	$(BIN)/arnie serve --temp --verbose &
+
+	# Upload the current version of ArniePye to the server
 	- $(PYTHON) setup.py sdist upload -r local
 
-	- virtualenv env2
-	- env2/Scripts/python.exe arniepye/files/bootstrap.py
+	# Create a temporary virtualenv for the demo and bootstrap ArniePye
+	- virtualenv demo ; cd demo ;\
+	wget http://127.0.0.1:8080/packages/bootstrap/bootstrap.py ;\
+	Scripts/python.exe bootstrap.py
 
-	- @echo
-	- @echo Ctrl+C to stop the server...
+	# Use 'arnie' to install and uninstall another package
+	- demo/Scripts/arnie install testpackage
+	- demo/Scripts/arnie uninstall testpackage
+
+	# Clean up the demo and prompt the user to stop the server
+	- rm -rf demo
+	@echo
+	@echo !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+	@echo !!! press Ctrl+C to stop the server !!!
+	@echo !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!

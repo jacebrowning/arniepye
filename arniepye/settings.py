@@ -9,8 +9,9 @@ import logging
 
 # Server settings
 SERVER_URLS = [
-'http://arnie/simple/',
-'http://127.0.0.1:8080/simple/'
+'http://arnie/simple/',  # main server
+'http://arnie-dev/simple/',  # development server
+'http://127.0.0.1:8080/simple/'  # local server
 ]
 FALLBACK_URLS = [
 'https://pypi.python.org/simple/'

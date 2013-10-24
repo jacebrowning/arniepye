@@ -24,7 +24,7 @@ EASY_INSTALL = os.path.join(SCRIPTS, 'easy_install')
 PIP_URL = "https://raw.github.com/pypa/pip/master/contrib/get-pip.py"
 PIP = os.path.join(SCRIPTS, 'pip')
 
-SERVER_URL = "http://127.0.0.1:8080/simple/"
+SERVER_URL = None  # set dynamically on the server
 ARNIE = os.path.join(SCRIPTS, 'arnie3' if PY3 else 'arnie2')
 
 GTK_URL = "http://ftp.gnome.org/pub/GNOME/binaries/win32/pygtk/2.24/pygtk-all-in-one-2.24.0.win32-py2.7.msi"
@@ -97,7 +97,11 @@ def easy_install(*names):
 
 def pip(*names, url=None):
     """Install Python packages using pip and a local server."""
-    args = [PIP, 'install', '--index-url', url, '--upgrade'] + list(names)
+    args = [PIP, 'install', '--upgrade'] + list(names)
+    if url:
+        args.extend(['--index-url', url])
+    else:
+        logging.warning("no local PyPI server available")
     _call(args)
 
 

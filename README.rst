@@ -40,7 +40,6 @@ To use ArniePye with your non-default Python installation, use::
     $ arnie2  # Python 2
     $ arnie3  # Python 3
 
-
 To install/uninstall a package::
 
     $ arnie install PackageName
@@ -49,3 +48,29 @@ To install/uninstall a package::
 To start the PyPI server::
 
     $ arnie serve
+
+
+Uploading Packages
+==================
+
+Create a .pypirc in your home directory::
+
+   [distutils]
+   index-servers =
+    arnie
+    local
+
+   [arnie]
+   repository: http://arnie
+   username: dw
+   password: dw
+
+   [local]
+   repository: http://127.0.0.1:8080
+   username: dw
+   password: dw
+
+After incrementing the version number of your project, run::
+
+   python setup.py sdist upload -r arnie
+
