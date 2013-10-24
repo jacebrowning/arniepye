@@ -27,11 +27,8 @@ class TestRun(unittest.TestCase):  # pylint: disable=R0904
     def test_serve_interrupt(self):
         """Verify the server can be interrupted."""
         def side_effect(*args):
-            """First: None, second: raise KeyboardIntterupt, final: None"""
+            """First call: None, second call, raise KeyboardIntterupt."""
             def second_call(*args):
-                def final_call(*args):
-                    return None
-                subprocess.Popen.poll.side_effect = final_call
                 raise KeyboardInterrupt()
             subprocess.Popen.poll.side_effect = second_call
             return None

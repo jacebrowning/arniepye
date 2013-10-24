@@ -33,7 +33,7 @@ def run(port=8080, path=settings.PACKAGES_DIR, forever=True, temp=False):
         logging.warning("pypi manually terminated")
         return False
     finally:
-        if process.poll() is None:
+        if process.returncode is None:
             process.terminate()
         _teardown(path, remove=temp)  # clean up the server files
         logging.debug("pypi server stopped")
