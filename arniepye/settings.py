@@ -11,7 +11,8 @@ import logging
 SERVER_URLS = [
 'http://arnie/simple/',  # main server
 'http://arnie-dev/simple/',  # development server
-'http://127.0.0.1:8080/simple/'  # local server
+'http://127.0.0.1:8080/simple/',  # local server
+'http://DW-89:8080/simple/',  # TODO: remove once arnie is working
 ]
 FALLBACK_URLS = [
 'https://pypi.python.org/simple/'

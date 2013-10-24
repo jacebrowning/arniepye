@@ -74,7 +74,7 @@ class TestMain(unittest.TestCase):  # pylint: disable=R0904
     """Integration tests for the ArniePye main entry points."""
 
     def test_install_uninstall(self):
-        """Verify a pakcage can be installed."""
+        """Verify a package can be installed."""
         self.assertTrue(main.install(['testpackage']))
         self.assertTrue(main.uninstall(['testpackage']))
 

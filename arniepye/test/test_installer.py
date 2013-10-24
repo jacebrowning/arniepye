@@ -35,8 +35,11 @@ class TestInstall(unittest.TestCase):  # pylint: disable=R0904
     def test_install_cancel(self):
         """Verify installation can be cancelled."""
         def side_effect(*args):
-            """First call: None, second call, raise KeyboardIntterupt."""
+            """First: None, second: raise KeyboardIntterupt, final: None"""
             def second_call(*args):
+                def final_call(*args):
+                    return None
+                subprocess.Popen.poll.side_effect = final_call
                 raise KeyboardInterrupt()
             subprocess.Popen.poll.side_effect = second_call
             return None

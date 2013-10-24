@@ -32,7 +32,8 @@ def install(names, reverse=False):
         logging.warning("pip manually terminated")
         return False
     finally:
-        process.terminate()
+        if process.poll() is None:
+            process.terminate()
 
     return process.returncode == 0
 

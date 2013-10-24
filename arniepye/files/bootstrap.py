@@ -20,7 +20,7 @@ if WINDOWS:
     if BIN.count('Scripts') > 1:  # inside a virtualenv
         BIN = os.path.dirname(BIN)
 else:
-    BIN = os.path.dirname(sys.executable)
+    BIN = '/usr/local/bin'
 
 SETUPTOOLS_URL = "https://bitbucket.org/pypa/setuptools/raw/bootstrap/ez_setup.py"
 EASY_INSTALL = os.path.join(BIN, 'easy_install')
@@ -53,6 +53,9 @@ def main():
 
     # Install virtualenv using ArniePye
     arnie('virtualenv')
+
+    # TODO: add GTK+ install
+    # TODO: add PySVN install
 
 #     # Install the GTK+ buidle
 #     gtk = 'install_gtk.exe'

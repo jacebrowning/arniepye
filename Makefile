@@ -151,13 +151,7 @@ upload: .clean-dist
 # Demo #######################################################################
 
 .PHONY: demo
-demo: develop
-
-	# Start a local PyPI server in the background
-	$(MAKE) demo-serve
-
-	# Upload the current version of ArniePye to the server
-	- $(PYTHON) setup.py sdist upload -r local
+demo: serve
 
 	# Create a temporary virtualenv for the demo and bootstrap ArniePye
 	- virtualenv --python $(VERSION) demo ; cd demo ;\
@@ -175,6 +169,15 @@ demo: develop
 	@echo !!! press Ctrl+C to stop the server !!!
 	@echo !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
-.PHONY: demo-serve
-demo-serve: develop
+.PHONY: serve
+serve: develop
+
+	# Start a local PyPI server in the background
 	$(BIN)/arnie serve --temp --verbose &
+
+	# Upload the current version of ArniePye to the server
+	$(PYTHON) setup.py sdist upload -r local
+
+	# Notify the user that the server is still running
+	@echo
+	@echo press Ctrl+C when done serving...
