@@ -48,11 +48,12 @@ def main():
     # Install pip using setuptools
     easy_install('pip')
 
-    # Install ArniePye using pip
+    # Install virtualenv and ArniePye using pip
+    pip('virtualenv')
     pip('ArniePye', url=SERVER_URL)
 
-    # Install virtualenv using ArniePye
-    arnie('virtualenv')
+    # Install "essential" packages with ArniePye
+    arnie('pep8')
 
     # TODO: add GTK+ install
     # TODO: add PySVN install
@@ -109,7 +110,7 @@ def pip(*names, **kwargs):
     if url:
         args.extend(['--index-url', url])
     else:
-        logging.warning("no local PyPI server available")
+        logging.warning("no local PyPI specified")
     _call(args)
 
 
