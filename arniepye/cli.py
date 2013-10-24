@@ -31,12 +31,15 @@ class _WarningFormatter(logging.Formatter, object):
         self.verbose_format = verbose_format
 
     def format(self, record):
+        """Hack to dynamically change the logging format."""
         if record.levelno > logging.INFO:
-            self._fmt = self.verbose_format  # Python 2
-            self._style._fmt = self.verbose_format  # Python 3
+            fmt = self.verbose_format
         else:
-            self._fmt = self.default_format  # Python 2
-            self._style._fmt = self.default_format  # Python 3
+            fmt = self.default_format
+        if sys.version_info[0] == 2:  # pragma: no cover, version-specific
+            self._fmt = fmt  # Python 2
+        else:  # pragma: no cover, version-specific
+            self._style._fmt = fmt  # Python 3
         return super(_WarningFormatter, self).format(record)
 
 
@@ -49,7 +52,7 @@ def main(args=None):
     debug = argparse.ArgumentParser(add_help=False)
     debug.add_argument('-V', '--version', action='version', version=VERSION)
     debug.add_argument('-v', '--verbose', action='count', default=0,
-                        help="enable verbose logging")
+                       help="enable verbose logging")
 
     # Main parser
     parser = argparse.ArgumentParser(prog=CLI, description=__doc__,
@@ -86,7 +89,7 @@ def main(args=None):
     # Run the program
     if args.command:
         function = globals()['_run_' + args.command]
-    else:
+    else:  # pragma: no cover, Python 2.7 shows the error sonner
         parser.print_help()
         parser.exit(1)
     try:
