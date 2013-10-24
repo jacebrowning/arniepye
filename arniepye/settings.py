@@ -8,9 +8,12 @@ import os
 import logging
 
 # Server settings
-URLS = [  # TODO: update with a valid server URL
-'http://127.0.0.1:8080',
-'https://pypi.python.org/simple/',
+SERVER_URLS = [
+'http://arnie/simple/',
+'http://127.0.0.1:8080/simple/'
+]
+FALLBACK_URLS = [
+'https://pypi.python.org/simple/'
 ]
 PACKAGES_DIR = os.path.expanduser("~/packages")
 HTACCESS = os.path.expanduser("~/.htaccess")

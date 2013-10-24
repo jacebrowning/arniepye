@@ -12,7 +12,7 @@ import requests
 
 from arniepye import settings
 
-URL = None
+URL = None  # first available PyPI server set at runtime
 
 
 def install(names, reverse=False):
@@ -61,16 +61,17 @@ def _pip_install(names):
 def _set_url():
     """Set the default PyPI server based on HTTP response."""
     global URL
-    for URL in settings.URLS:
+    for URL in settings.SERVER_URLS + settings.FALLBACK_URLS:
         try:
+            logging.debug("testing {0}...".format(URL))
             request = requests.get(URL)
             if request.status_code == 200:  # pragma: no cover, integration test
-                logging.debug("valid: {0}".format(URL))
+                logging.info("found server: {0}".format(URL))
                 break
         except requests.exceptions.RequestException:
-            logging.debug("invalid: {0}".format(URL))
-    else:  # pragma: no cover, unit test only
-        logging.warning("no valid PyPI servers")
+            logging.warning("cannot find server: {0}".format(URL))
+    if URL in settings.FALLBACK_URLS:  # pragma: no cover, unit test only
+        logging.warning("no local PyPI servers found")
 
 
 def _pip_uninstall(names):
