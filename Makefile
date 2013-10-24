@@ -154,7 +154,7 @@ upload: .clean-dist
 demo: develop
 
 	# Start a local PyPI server in the background
-	$(BIN)/arnie serve --temp --verbose &
+	$(MAKE) demo-serve
 
 	# Upload the current version of ArniePye to the server
 	- $(PYTHON) setup.py sdist upload -r local
@@ -174,3 +174,7 @@ demo: develop
 	@echo !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 	@echo !!! press Ctrl+C to stop the server !!!
 	@echo !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+.PHONY: demo-serve
+demo-serve: develop
+	$(BIN)/arnie serve --temp --verbose &

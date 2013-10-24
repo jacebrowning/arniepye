@@ -11,21 +11,25 @@ import tempfile
 import subprocess
 import logging
 
-PY3 = (sys.version_info[0] == 3)
+PYTHON3 = (sys.version_info[0] == 3)
+WINDOWS = (os.name == 'nt')
 
 PYTHON = sys.executable
-SCRIPTS = os.path.join(os.path.dirname(sys.executable), 'Scripts')
-if SCRIPTS.count('Scripts') > 1:  # inside a virtualenv
-    SCRIPTS = os.path.dirname(SCRIPTS)
+if WINDOWS:
+    BIN = os.path.join(os.path.dirname(sys.executable), 'Scripts')
+    if BIN.count('Scripts') > 1:  # inside a virtualenv
+        BIN = os.path.dirname(BIN)
+else:
+    BIN = os.path.dirname(sys.executable)
 
 SETUPTOOLS_URL = "https://bitbucket.org/pypa/setuptools/raw/bootstrap/ez_setup.py"
-EASY_INSTALL = os.path.join(SCRIPTS, 'easy_install')
+EASY_INSTALL = os.path.join(BIN, 'easy_install')
 
 PIP_URL = "https://raw.github.com/pypa/pip/master/contrib/get-pip.py"
-PIP = os.path.join(SCRIPTS, 'pip')
+PIP = os.path.join(BIN, 'pip')
 
 SERVER_URL = None  # set dynamically on the server
-ARNIE = os.path.join(SCRIPTS, 'arnie3' if PY3 else 'arnie2')
+ARNIE = os.path.join(BIN, 'arnie3' if PYTHON3 else 'arnie2')
 
 GTK_URL = "http://ftp.gnome.org/pub/GNOME/binaries/win32/pygtk/2.24/pygtk-all-in-one-2.24.0.win32-py2.7.msi"
 
@@ -68,7 +72,7 @@ def download(url, path=None):
         path = url.rsplit('/')[-1]
     logging.debug("downloading {0} to {1}...".format(url, path))
 
-    if PY3:
+    if PYTHON3:
         import urllib.request
         response = urllib.request.urlopen(url)
         data = response.read()
