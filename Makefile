@@ -160,7 +160,7 @@ demo: develop
 	- $(PYTHON) setup.py sdist upload -r local
 
 	# Create a temporary virtualenv for the demo and bootstrap ArniePye
-	- virtualenv demo ; cd demo ;\
+	- virtualenv --python $(VERSION) demo ; cd demo ;\
 	wget http://127.0.0.1:8080/packages/bootstrap/bootstrap.py ;\
 	Scripts/python.exe bootstrap.py
 

@@ -95,8 +95,9 @@ def easy_install(*names):
     _call(args)
 
 
-def pip(*names, url=None):
+def pip(*names, **kwargs):
     """Install Python packages using pip and a local server."""
+    url = kwargs.get('url', None)  # Python 2 compatibility
     args = [PIP, 'install', '--upgrade'] + list(names)
     if url:
         args.extend(['--index-url', url])
