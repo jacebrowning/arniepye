@@ -52,7 +52,7 @@ class TestCLI(unittest.TestCase):  # pylint: disable=R0904
         self.assertRaises(SystemExit, cli, ['serve'])
 
 
-@patch('arniepye.cli._run_serve', Mock(return_value=True))
+@patch('arniepye.cli._run_serve', Mock(return_value=True))  # pylint: disable=R0904
 class TestLogging(unittest.TestCase):  # pylint: disable=R0904
     """Integration tests for the CLI logging."""
 

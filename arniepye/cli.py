@@ -37,9 +37,9 @@ class _WarningFormatter(logging.Formatter, object):
         else:
             fmt = self.default_format
         if sys.version_info[0] == 2:  # pragma: no cover, version-specific
-            self._fmt = fmt  # Python 2
+            self._fmt = fmt  # Python 2, pylint: disable=E1101,W0212
         else:  # pragma: no cover, version-specific
-            self._style._fmt = fmt  # Python 3
+            self._style._fmt = fmt  # Python 3, pylint: disable=E1101,W0212
         return super(_WarningFormatter, self).format(record)
 
 
@@ -130,6 +130,7 @@ def _run_install(args, cwd, error):
     @param cwd: current working directory
     @param error: function to call for CLI errors
     """
+    logging.debug("unused arguments: {0}".format((cwd, error)))
     return _main.install(args.name)
 
 
@@ -139,6 +140,7 @@ def _run_uninstall(args, cwd, error):
     @param cwd: current working directory
     @param error: function to call for CLI errors
     """
+    logging.debug("unused arguments: {0}".format((cwd, error)))
     return _main.uninstall(args.name)
 
 
@@ -148,6 +150,7 @@ def _run_serve(args, cwd, error):
     @param cwd: current working directory
     @param error: function to call for CLI errors
     """
+    logging.debug("unused arguments: {0}".format((cwd, error)))
     return _main.serve(forever=not args.test, temp=args.temp)
 
 

@@ -89,43 +89,40 @@ def run(clean=False):
 
 
 def clean_env():
-        if IS_WINDOWS:
+    if IS_WINDOWS:
 
-            try:
-                import _winreg as winreg  # Python 2
-            except ImportError:
-                import winreg  # Python 3
-            import win32com
-            import win32gui
+        try:
+            import _winreg as winreg  # Python 2
+        except ImportError:
+            import winreg  # Python 3
+        import win32com
+        import win32gui
 
-            path = r"SYSTEM\CurrentControlSet\Control\Session Manager\Environment"
-            reg = winreg.ConnectRegistry(None, winreg.HKEY_LOCAL_MACHINE)
-            # key = winreg.OpenKey(reg, path, 0, winreg.KEY_ALL_ACCESS)
-            key = winreg.OpenKey(reg, path, 0, winreg.KEY_QUERY_VALUE)
-            try:
+        path = r"SYSTEM\CurrentControlSet\Control\Session Manager\Environment"
+        reg = winreg.ConnectRegistry(None, winreg.HKEY_LOCAL_MACHINE)
+        # key = winreg.OpenKey(reg, path, 0, winreg.KEY_ALL_ACCESS)
+        key = winreg.OpenKey(reg, path, 0, winreg.KEY_QUERY_VALUE)
+        try:
 
-                print(winreg.QueryValue(key, 'PATH'))
+            print(winreg.QueryValue(key, 'PATH'))
 
-                if len(sys.argv) == 1:
-                    winreg.show(key)
+            if len(sys.argv) == 1:
+                winreg.show(key)
+            else:
+                name, value = sys.argv[1].split('=')
+                if name.upper() == 'PATH':
+                    value = winreg.queryValue(key, name) + ';' + value
+                if value:
+                    winreg.SetValueEx(key, name, 0, winreg.REG_EXPAND_SZ, value)
                 else:
-                    name, value = sys.argv[1].split('=')
-                    if name.upper() == 'PATH':
-                        value = winreg.queryValue(key, name) + ';' + value
-                    if value:
-                        winreg.SetValueEx(key, name, 0, winreg.REG_EXPAND_SZ, value)
-                    else:
-                        winreg.DeleteValue(key, name)
+                    winreg.DeleteValue(key, name)
 
-                win32gui.SendMessage(win32com.HWND_BROADCAST, win32com.WM_SETTINGCHANGE, 0, 'Environment')
+            win32gui.SendMessage(win32com.HWND_BROADCAST, win32com.WM_SETTINGCHANGE, 0, 'Environment')
 
-            finally:
+        finally:
 
-                winreg.CloseKey(key)
-                winreg.CloseKey(reg)
-
-
-
+            winreg.CloseKey(key)
+            winreg.CloseKey(reg)
 
 
 def add_env():

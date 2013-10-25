@@ -61,7 +61,7 @@ def _pip_install(names):
 
 def _set_url():
     """Set the default PyPI server based on HTTP response."""
-    global URL
+    global URL  # pylint: disable=W0603
     for URL in settings.SERVER_URLS + settings.FALLBACK_URLS:
         try:
             logging.debug("testing {0}...".format(URL))

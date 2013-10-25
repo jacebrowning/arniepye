@@ -47,24 +47,9 @@ $(PYTHON):
 .PHONY: depends
 depends: .env $(DEPENDS) $(SOURCES)
 $(DEPENDS):
-	$(PIP) install docutils pdoc pep8 nose coverage --download-cache=$(CACHE)
-	$(MAKE) .pylint
+	$(PIP) install docutils pdoc pep8 pylint nose coverage --download-cache=$(CACHE)
 	touch $(DEPENDS)  # flag to indicate dependencies are installed
 
-# issue: pylint is not currently installing on Windows
-# tracker: https://bitbucket.org/logilab/pylint/issue/51/building-pylint-windows-installer-for
-# workaround: skip pylint on windows
-.PHONY: .pylint
-ifeq ($(shell uname),Windows)
-.pylint: .env
-	@echo WARNING: pylint cannot be installed on Windows
-else ifeq ($(shell uname),CYGWIN_NT-6.1)
-.pylint: .env
-	@echo WARNING: pylint cannot be installed on Cygwin
-else
-.pylint: .env
-	$(PIP) install pylint --download-cache=$(CACHE)
-endif
 
 # Documentation ##############################################################
 
@@ -84,23 +69,12 @@ doc-open: doc
 pep8: depends
 	$(PEP8) $(PACKAGE) --ignore=E501 
 
-# issue: pylint is not currently installing on Windows
-# tracker: https://bitbucket.org/logilab/pylint/issue/51/building-pylint-windows-installer-for
-# workaround: skip pylint on windows
 .PHONY: pylint
-ifeq ($(shell uname),Windows)
-pylint: depends
-	@echo pylint cannot be run on Windows
-else ifeq ($(shell uname),CYGWIN_NT-6.1-WOW64)
-pylint: depends
-	@echo pylint cannot be run on Cygwin
-else
 pylint: depends
 	$(PYLINT) $(PACKAGE) --reports no \
 	                     --msg-template="{msg_id}: {msg}: {obj} line:{line}" \
 	                     --max-line-length=99 \
 	                     --disable=I0011,W0142,W0511,R0801
-endif
 
 .PHONY: check
 check: depends
