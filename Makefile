@@ -8,12 +8,12 @@ DEPENDS := $(VIRTUALENV)/.depends
 EGG_INFO := $(subst -,_,$(PROJECT)).egg-info
 
 ifeq ($(OS),Windows_NT)
-VERSION := C:\\Python33\\python.exe
+VERSION := C:\\Python27\\python.exe
 BIN := $(VIRTUALENV)/Scripts
 EXE := .exe
 OPEN := cmd /c start
 else
-VERSION := python3.3
+VERSION := python2.7
 BIN := $(VIRTUALENV)/bin
 OPEN := open
 endif
