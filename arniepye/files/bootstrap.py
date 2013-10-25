@@ -39,6 +39,8 @@ SERVER_URL = 'http://{ADDRESS}/simple/'  # set dynamically on the server
 ARNIE = os.path.join(BIN, 'arnie3' if IS_PYTHON3 else 'arnie2')
 
 GTK_URL = "http://ftp.gnome.org/pub/GNOME/binaries/win32/pygtk/2.24/pygtk-all-in-one-2.24.0.win32-py2.7.msi"
+if IS_PYTHON3:
+    GTK_URL = None
 
 
 def main():
@@ -54,91 +56,41 @@ def run(clean=False):
 
     @param clean: remove all Python paths from the Windows PATH first
     """
-# TODO: update the PATH variable
-#    # Clean environment variables
-#    if clean:
-#       clean_env()
-#    add_env()
-
     # Create a temporary directory
     temp = tempfile.mkdtemp()
+    logging.debug("temporary directory: {0}".format(temp))
     os.chdir(temp)
 
     # Install setuptools from source
-    script = download(SETUPTOOLS_URL)
-    python(script)
+    python(download(SETUPTOOLS_URL))
 
     # Install pip using setuptools
     easy_install('pip')
 
-    # Install virtualenv and ArniePye using pip
+    # Install virtualenv using pip
     pip('virtualenv')
+
+    # Install non-pip-installable packages
+    msiexec(download(GTK_URL))
+    # TODO: install PySVN, couldn't find 1.7.1 for Python 2.7?
+
+    # Install  ArniePye using pip
     pip('ArniePye', url=SERVER_URL)
 
     # Install "essential" packages with ArniePye
     arnie('pep8')
-
-# TODO: add GTK+ install
-# TODO: add PySVN install
-#     # Install the GTK+ buidle
-#     gtk = 'install_gtk.exe'
-#     download(GTK_URL, gtk)
-#     subprocess.call([gtk])
-#     os.remove(gtk)
 
     # Delete the temporary directory
     os.chdir(os.path.dirname(temp))
     shutil.rmtree(temp)
 
 
-# TODO: this code is non-functional
-def clean_env():
-    if IS_WINDOWS:
-
-        try:
-            import _winreg as winreg  # Python 2
-        except ImportError:
-            import winreg  # Python 3
-        import win32com
-        import win32gui
-
-        path = r"SYSTEM\CurrentControlSet\Control\Session Manager\Environment"
-        reg = winreg.ConnectRegistry(None, winreg.HKEY_LOCAL_MACHINE)
-        # key = winreg.OpenKey(reg, path, 0, winreg.KEY_ALL_ACCESS)
-        key = winreg.OpenKey(reg, path, 0, winreg.KEY_QUERY_VALUE)
-        try:
-
-            print(winreg.QueryValue(key, 'PATH'))
-
-            if len(sys.argv) == 1:
-                winreg.show(key)
-            else:
-                name, value = sys.argv[1].split('=')
-                if name.upper() == 'PATH':
-                    value = winreg.queryValue(key, name) + ';' + value
-                if value:
-                    winreg.SetValueEx(key, name, 0, winreg.REG_EXPAND_SZ, value)
-                else:
-                    winreg.DeleteValue(key, name)
-
-            win32gui.SendMessage(win32com.HWND_BROADCAST, win32com.WM_SETTINGCHANGE, 0, 'Environment')
-
-        finally:
-
-            winreg.CloseKey(key)
-            winreg.CloseKey(reg)
-
-
-# TODO: this code is non-functional
-def add_env():
-    pass
-
-
 def download(url, path=None):
     """Download a file from the URL to a local path."""
-
+    if url is None:
+        return
     if path is None:
-        path = url.rsplit('/')[-1]
+        path = os.path.join(os.getcwd(), url.rsplit('/')[-1])
     logging.debug("downloading {0} to {1}...".format(url, path))
 
     if IS_PYTHON3:
@@ -183,6 +135,13 @@ def arnie(*names):
     """Install Python packages using ArniePye."""
     args = [ARNIE, 'install'] + list(names)
     _call(args)
+
+
+def msiexec(path):
+    """Install an MSI package."""
+    if path:
+        args = ['msiexec', '/i', path]
+        _call(args)
 
 
 def _call(args):
