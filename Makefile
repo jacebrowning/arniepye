@@ -153,6 +153,9 @@ upload: .clean-dist
 .PHONY: demo
 demo: serve
 
+	# This demo starts a local server and verifies that bootstrap.py
+	# installs ArniePye into a new virtualenv.
+
 	# Create a temporary virtualenv for the demo and bootstrap ArniePye
 	- virtualenv --python $(VERSION) demo ; cd demo ;\
 	wget http://127.0.0.1:8080/packages/bootstrap/bootstrap.py ;\
@@ -171,6 +174,9 @@ demo: serve
 
 .PHONY: demo2
 demo2: serve
+
+	# This demo starts a local server and verifies that bootstrap.bat
+	# installs Python 2 and 3 then runs bootstrap.py.
 
 	# Create a temporary virtualenv for the demo and bootstrap ArniePye
 	- mkdir demo2 ; cd demo2 ;\
