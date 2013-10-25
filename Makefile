@@ -91,7 +91,7 @@ pep8: depends
 ifeq ($(shell uname),Windows)
 pylint: depends
 	@echo pylint cannot be run on Windows
-else ifeq ($(shell uname),CYGWIN_NT-6.1-WOW64)
+else ifeq ($(shell uname),CYGWIN_NT-6.1)
 pylint: depends
 	@echo pylint cannot be run on Cygwin
 else

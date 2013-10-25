@@ -15,6 +15,7 @@ from arniepye import installer
 
 
 class MockPopen(Mock):
+    """Mock subprocess.Popen for testing."""
 
     def __init__(self, *args, **kwargs):
         super(MockPopen, self).__init__(*args, **kwargs)
@@ -23,7 +24,7 @@ class MockPopen(Mock):
         self.returncode = 0
 
 
-@patch('requests.get', Mock(side_effect=requests.exceptions.RequestException))
+@patch('requests.get', Mock(side_effect=requests.exceptions.RequestException))  # pylint: disable=R0904
 class TestInstall(unittest.TestCase):  # pylint: disable=R0904
     """Unit tests for the install function."""  # pylint: disable=C0103,W0212
 
@@ -34,9 +35,10 @@ class TestInstall(unittest.TestCase):  # pylint: disable=R0904
 
     def test_install_cancel(self):
         """Verify installation can be cancelled."""
-        def side_effect(*args):
-            """First call: None, second call, raise KeyboardIntterupt."""
-            def second_call(*args):
+        def side_effect(*args):  # pylint: disable=W0613
+            """First call: return None."""
+            def second_call(*args):  # pylint: disable=W0613
+                """Second call: raise KeyboardInterrupt."""
                 raise KeyboardInterrupt()
             subprocess.Popen.poll.side_effect = second_call
             return None
