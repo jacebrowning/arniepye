@@ -13,12 +13,15 @@ import logging
 
 IS_PYTHON3 = (sys.version_info[0] == 3)
 IS_WINDOWS = (os.name == 'nt')
+IS_CYGWIN = (sys.platform == 'cygwin')  # which is also Windows
 
 PYTHON = sys.executable
-if IS_WINDOWS:
-    BIN = os.path.join(os.path.dirname(sys.executable), 'Scripts')
-    if BIN.count('Scripts') > 1:  # inside a virtualenv
-        BIN = os.path.dirname(BIN)
+BIN = os.path.dirname(PYTHON)
+if IS_CYGWIN:
+    pass
+elif IS_WINDOWS:
+    if os.path.basename(BIN) != 'Scripts':
+        BIN = os.path.join(BIN, 'Scripts')  # not inside a virtualenv
 else:
     BIN = '/usr/local/bin'
 
@@ -51,8 +54,8 @@ def run(clean=False):
 
     @param clean: remove all Python paths from the Windows PATH first
     """
-    # Clean environment variables
 # TODO: update the PATH variable
+#    # Clean environment variables
 #    if clean:
 #       clean_env()
 #    add_env()
@@ -88,6 +91,7 @@ def run(clean=False):
     shutil.rmtree(temp)
 
 
+# TODO: this code is non-functional
 def clean_env():
         if IS_WINDOWS:
 
@@ -125,9 +129,7 @@ def clean_env():
                 winreg.CloseKey(reg)
 
 
-
-
-
+# TODO: this code is non-functional
 def add_env():
     pass
 

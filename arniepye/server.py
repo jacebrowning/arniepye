@@ -62,7 +62,7 @@ def _setup(path, port):
     shutil.rmtree(bootstrap, ignore_errors=True)
     shutil.copytree(FILES, bootstrap)
     # Get the current server address
-    address = socket.getfqdn() + ('' if port == 80 else ':' + str(port))
+    address = socket.gethostname() + ('' if port == 80 else ':' + str(port))
     # Update the bootstrap batch file with the current server
     bootstrap_bat = os.path.join(bootstrap, 'bootstrap.bat')
     _replace_address(bootstrap_bat, address)
