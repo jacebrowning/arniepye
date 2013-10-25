@@ -15,6 +15,8 @@ from arniepye import settings
 
 FILES = os.path.join(os.path.dirname(__file__), 'files')
 
+ADDRESS = '{ADDRESS}'  # constant in bootstrap files to be replaced
+
 
 def run(port=8080, path=settings.PACKAGES_DIR, forever=True, temp=False):
     """Create a packages directory and run the server forever.
@@ -59,20 +61,27 @@ def _setup(path, port):
     bootstrap = os.path.join(path, 'bootstrap')
     shutil.rmtree(bootstrap, ignore_errors=True)
     shutil.copytree(FILES, bootstrap)
-    # Update the bootstrap script with the current hostname
+    # Get the current server address
+    address = socket.getfqdn() + ('' if port == 80 else ':' + str(port))
+    # Update the bootstrap batch file with the current server
+    bootstrap_bat = os.path.join(bootstrap, 'bootstrap.bat')
+    _replace_address(bootstrap_bat, address)
+    # Update the bootstrap Python script with the current server
     bootstrap_py = os.path.join(bootstrap, 'bootstrap.py')
-    port = '' if port == 80 else ':' + str(port)
-    url = "'http://{0}{1}/simple/'".format(socket.getfqdn(), port)
-    with open(bootstrap_py, 'r') as infile:
-        lines = infile.readlines()
-    with open(bootstrap_py, 'w') as outfile:
-        for line in lines:
-            if line.startswith("SERVER_URL = None"):
-                line = line.replace('None', url)
-            outfile.write(line)
+    _replace_address(bootstrap_py, address)
     # Move the .htaccess file into place
     htaccess = os.path.join(bootstrap, 'htaccess')
     shutil.move(htaccess, os.path.expanduser(settings.HTACCESS))
+
+
+def _replace_address(path, address):
+    """Replace address placeholders in a file."""
+    with open(path, 'r') as infile:
+        lines = infile.readlines()
+    with open(path, 'w') as outfile:
+        for line in lines:
+            line = line.replace(ADDRESS, address)
+            outfile.write(line)
 
 
 def _teardown(path, remove=False):

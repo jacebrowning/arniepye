@@ -169,6 +169,21 @@ demo: serve
 	@echo !!! press Ctrl+C to stop the server !!!
 	@echo !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
+.PHONY: demo2
+demo2: serve
+
+	# Create a temporary virtualenv for the demo and bootstrap ArniePye
+	- mkdir demo2 ; cd demo2 ;\
+	wget http://127.0.0.1:8080/packages/bootstrap/bootstrap.bat ;\
+	cmd /c bootstrap.bat
+
+	# Clean up the demo and prompt the user to stop the server
+	- rm -rf demo2
+	@echo
+	@echo !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+	@echo !!! press Ctrl+C to stop the server !!!
+	@echo !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
 .PHONY: serve
 serve: develop
 
