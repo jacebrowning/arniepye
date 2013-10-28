@@ -143,6 +143,10 @@ def msiexec(path):
 
 
 def _call(args):
+    # Add 'sudo' for a non-Windows, non-root user
+    if not IS_WINDOWS and os.geteuid() != 0:
+        args.insert(0, 'sudo')
+    # Run the command
     logging.debug("$ {0}".format(' '.join(args)))
     subprocess.call(args)
 

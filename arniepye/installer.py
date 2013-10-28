@@ -4,6 +4,7 @@
 Wrapper for pip to install packages.
 """
 
+import os
 import sys
 import subprocess
 import logging
@@ -55,8 +56,7 @@ def _pip_install(names):
 
     args = [sys.executable, '-m', 'pip', 'install',
             '--index-url', URL, '--upgrade'] + names
-    logging.debug("$ {0}".format(' '.join(args)))
-    return subprocess.Popen(args)
+    return _call(args)
 
 
 def _set_url():
@@ -78,6 +78,14 @@ def _set_url():
 def _pip_uninstall(names):
     """Start and return a PIP uninstall subprocess."""
     args = [sys.executable, '-m', 'pip', 'uninstall', '--yes'] + names
+    return _call(args)
+
+
+def _call(args):
+    # Add 'sudo' for a non-Windows, non-root user
+    if os.name != 'nt' and os.geteuid() != 0:  # pragma: no cover, OS-specific
+        args.insert(0, 'sudo')
+    # Run the command
     logging.debug("$ {0}".format(' '.join(args)))
     return subprocess.Popen(args)
 
