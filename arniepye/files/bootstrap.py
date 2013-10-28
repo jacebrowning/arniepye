@@ -41,23 +41,63 @@ if not IS_WINDOWS:
     GTK_URL = None
 
 
+if IS_PYTHON3:
+    import winreg
+else:
+    import _winreg as winreg
+
+
+# http://code.activestate.com/recipes/577621-manage-environment-variables-on-windows/
+class Win32Environment(object):
+    """Utility class to get/set windows environment variable"""
+
+    def __init__(self, scope):
+        assert scope in ('user', 'system')
+        self.scope = scope
+        if scope == 'user':
+            self.root = winreg.HKEY_CURRENT_USER
+            self.subkey = 'Environment'
+        else:
+            self.root = winreg.HKEY_LOCAL_MACHINE
+            self.subkey = r'SYSTEM\CurrentControlSet\Control\Session Manager\Environment'
+
+    def get(self, name):
+        """Get an an environment variable."""
+        key = winreg.OpenKey(self.root, self.subkey, 0, winreg.KEY_READ)
+        try:
+            value, _ = winreg.QueryValueEx(key, name)
+        except WindowsError:
+            value = ''
+        return value
+
+    def set(self, name, value):
+        """Set an environment variable."""
+        # Note: for 'system' scope, you must run this as Administrator
+        key = winreg.OpenKey(self.root, self.subkey, 0, winreg.KEY_ALL_ACCESS)
+        winreg.SetValueEx(key, name, 0, winreg.REG_EXPAND_SZ, value)
+        winreg.CloseKey(key)
+
+
 def main():
     """Process command-line arguments and run the program."""
 
-    clean = ('--clean' in sys.argv)
-    run(clean=clean)
+    clear = ('--clear' in sys.argv)
+    run(clear=clear)
 
 
-def run(clean=False):
+def run(clear=False):
     """Install setuptools, pip, arniepye, and non-pip components.
     On Windows, add Python to the user PATH variable.
 
-    @param clean: remove all Python paths from the Windows PATH first
+    @param clear: remove all Python paths from the Windows PATH first
     """
     # Create a temporary directory
     temp = tempfile.mkdtemp()
     logging.debug("temporary directory: {0}".format(temp))
     os.chdir(temp)
+
+    # Update paths to set the default Python version
+    update_paths(clear)
 
     # Install setuptools from source
     python(download(SETUPTOOLS_URL))
@@ -69,7 +109,10 @@ def run(clean=False):
     pip('virtualenv')
 
     # Install non-pip-installable packages
-    msiexec(download(GTK_URL))
+    try:
+        import gtk
+    except ImportError:
+        msiexec(download(GTK_URL))
     # TODO: install PySVN, couldn't find 1.7.1 for Python 2.7?
 
     # Install  ArniePye using pip
@@ -81,6 +124,38 @@ def run(clean=False):
     # Delete the temporary directory
     os.chdir(os.path.dirname(temp))
     shutil.rmtree(temp)
+
+
+def update_paths(clear):
+    if IS_WINDOWS and not IS_CYGWIN:
+
+        base = r"C:\Python"
+        scripts = "Scripts"
+        ver = "{0}{1}".format(*sys.version_info[:2])
+
+        # Get the current PATH
+        env = Win32Environment('user')
+        paths = [p for p in env.get('PATH').split(os.pathsep) if p]
+        logging.debug("old PATH: {}".format(paths))
+
+        # Clear Python from the PATH if specified
+        if clear:
+            logging.info("clearing all Python paths...")
+            paths = [p for p in paths if not p.startswith(base)]
+
+        # Add a default Python version
+        found = any((p.startswith(base) and scripts not in p) for p in paths)
+        if not found:
+            paths.append(base + ver)
+
+        # Add the scripts directory
+        path = os.path.join(base + ver, scripts)
+        if path not in paths:
+            paths.append(path)
+
+        # Set a new PATH
+        logging.debug("new PATH: {}".format(paths))
+        env.set('PATH', ';'.join(paths))
 
 
 def download(url, path=None):

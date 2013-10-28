@@ -1,5 +1,15 @@
-:: Python 2 and 3 installer sites
+::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
+:: Bootstaps a Python 2 and 3 installation from nothing.
+::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
 
+
+@echo off
+set version=33
+set /p version="Desired default Python version 27 or [33]? "
+@echo on
+
+
+:: Python 2 and 3 installer sites
 
 set PY27_SITE=http://www.python.org/ftp/python/2.7.5
 set PY27_FILE=python-2.7.5.msi
@@ -67,6 +77,7 @@ start /wait %PYWIN33_FILE%
 
 if %errorlevel% neq 0 goto :error
 
+
 :: Download bootstrap
 
 bitsadmin /transfer ArniePye /download /priority normal %BOOTSTRAP_URL% %TEMP%\%BOOTSTRAP_FILE%
@@ -76,8 +87,13 @@ if %errorlevel% neq 0 goto :error
 
 :: Bootstrap ArniePye
 
-C:\Python33\python %BOOTSTRAP_FILE% --clear
-C:\Python27\python %BOOTSTRAP_FILE%
+if %version% == 27 (
+    C:\Python27\python %BOOTSTRAP_FILE% --clear
+    C:\Python33\python %BOOTSTRAP_FILE%
+) else (
+    C:\Python33\python %BOOTSTRAP_FILE% --clear
+    C:\Python27\python %BOOTSTRAP_FILE%
+)
 
 
 if %errorlevel% neq 0 goto :error
