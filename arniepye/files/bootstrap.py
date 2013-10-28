@@ -28,10 +28,6 @@ else:
 SETUPTOOLS_URL = "https://bitbucket.org/pypa/setuptools/raw/bootstrap/ez_setup.py"
 EASY_INSTALL = os.path.join(BIN, 'easy_install')
 
-PYWIN32_URL = "http://sourceforge.net/projects/pywin32/files/pywin32/Build%20218/pywin32-218.win32-py2.7.exe"
-if IS_PYTHON3:
-    PYWIN32_URL = PYWIN32_URL.replace('2.7', '3.3')
-
 PIP_URL = "https://raw.github.com/pypa/pip/master/contrib/get-pip.py"
 PIP = os.path.join(BIN, 'pip')
 
@@ -40,6 +36,8 @@ ARNIE = os.path.join(BIN, 'arnie3' if IS_PYTHON3 else 'arnie2')
 
 GTK_URL = "http://ftp.gnome.org/pub/GNOME/binaries/win32/pygtk/2.24/pygtk-all-in-one-2.24.0.win32-py2.7.msi"
 if IS_PYTHON3:
+    GTK_URL = None
+if not IS_WINDOWS:
     GTK_URL = None
 
 

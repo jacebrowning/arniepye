@@ -23,7 +23,8 @@ setuptools.setup(
     author='Jace Browning',
     author_email='Jace.Browning@dornerworks.com',
 
-    packages=setuptools.find_packages(),
+    packages=['arniepye', 'arniepye.test'],
+    package_data={'arniepye': ['files/*'], 'arniepye.test': ['files/*']},
 
     entry_points={'console_scripts': [CLI + ' = arniepye.cli:main',
                                       CLIN + ' = arniepye.cli:main']},
