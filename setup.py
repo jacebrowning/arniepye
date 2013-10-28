@@ -16,7 +16,7 @@ CLIN = CLI + str(sys.version_info[0])
 
 setuptools.setup(
     name=__project__,
-    version='0.0.0',
+    version='0.0.1-rc.1',
 
     description="Wrapper for the PyPI server and PIP installer.",
     url='http://arnie/pypi/ArniePye',
@@ -30,7 +30,6 @@ setuptools.setup(
                                       CLIN + ' = arniepye.cli:main']},
 
     long_description=open('README.rst').read(),
-    license='TBD',  # TODO: determine DornerWorks license
 
     install_requires=["pypiserver==1.1.3", "pip==1.4.1",
                       "passlib", "requests", "mock"],
