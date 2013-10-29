@@ -13,7 +13,7 @@ BIN := $(VIRTUALENV)/Scripts
 EXE := .exe
 OPEN := cmd /c start
 else
-VERSION := python3.3
+VERSION := python3
 BIN := $(VIRTUALENV)/bin
 OPEN := open
 endif
