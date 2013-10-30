@@ -41,10 +41,11 @@ if not IS_WINDOWS:
     GTK_URL = None
 
 
-if IS_PYTHON3:
-    import winreg
-else:
-    import _winreg as winreg
+if IS_WINDOWS:
+    if IS_PYTHON3:
+        import winreg
+    else:
+        import _winreg as winreg
 
 
 # http://code.activestate.com/recipes/577621-manage-environment-variables-on-windows/
