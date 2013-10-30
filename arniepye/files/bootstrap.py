@@ -2,6 +2,16 @@
 
 """
 Bootstaps package management for an existing Python 2 or 3 installation.
+
+After running this script, install packages using 'arnie:
+
+    arnie install PackageName
+
+Or force installation into the site packages of specific Python version:
+
+    arnie2 install PackageName
+    arnie3 install PackageName
+
 """
 
 import os

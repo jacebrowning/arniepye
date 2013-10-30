@@ -28,6 +28,9 @@ class MockPopen(Mock):
 class TestInstall(unittest.TestCase):  # pylint: disable=R0904
     """Unit tests for the install function."""  # pylint: disable=C0103,W0212
 
+    def setUp(self):
+        installer.URL = None  # reset the known server each test
+
     @patch('subprocess.Popen', MockPopen)
     def test_install(self):
         """Verify install can be called."""

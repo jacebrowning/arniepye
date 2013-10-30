@@ -146,7 +146,7 @@ dist: .clean-dist
 
 .PHONY: upload
 upload: .clean-dist
-	$(PYTHON) setup.py register sdist upload
+	$(PYTHON) setup.py sdist upload -r arnie
 
 # Demo #######################################################################
 

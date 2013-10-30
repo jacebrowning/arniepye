@@ -14,7 +14,6 @@ SERVER_URLS = [
     'http://127.0.0.1:8080/simple/',  # local server
 ]
 FALLBACK_URLS = [
-    'http://DW-89:8080/simple/',  # TODO: remove once arnie is working
     'https://pypi.python.org/simple/',
 ]
 PACKAGES_DIR = os.path.expanduser("~/packages")

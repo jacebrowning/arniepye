@@ -1,3 +1,5 @@
+v0.1.0 - 2013/10/30:	First stable release.
+
 v0.0.2 - 2013/10/30:	Improved Linux support.
 						Added '--port' argument to 'arnie serve'.
 
