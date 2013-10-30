@@ -75,6 +75,8 @@ def main(args=None):
     # Server subparser
     sub = subs.add_parser('serve', formatter_class=_HelpFormatter,
                           parents=[debug], help="start a PyPI package server")
+    sub.add_argument('--port', metavar='NUMBER', default=8080,
+                     help="port to serve on")
     sub.add_argument('--temp', action='store_true',
                      help="remove all packages and temporary files on exit")
     sub.add_argument('--test', action='store_true',
@@ -151,7 +153,7 @@ def _run_serve(args, cwd, error):
     @param error: function to call for CLI errors
     """
     logging.debug("unused arguments: {0}".format((cwd, error)))
-    return _main.serve(forever=not args.test, temp=args.temp)
+    return _main.serve(port=args.port, forever=not args.test, temp=args.temp)
 
 
 if __name__ == '__main__':  # pragma: no cover, manual test
