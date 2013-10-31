@@ -37,8 +37,8 @@ Or directly from the source code::
     python setup.py install
 
 
-Command-line Interface
-======================
+Installing Packages
+===================
 
 After installation, ArniePye is available on the command-line as ``arnie``::
 
@@ -52,12 +52,15 @@ To use ArniePye with your non-default Python installation, use::
 
 To install/uninstall a package::
 
-    $ arnie install PackageName
-    $ arnie uninstall PackageName
+    $ arnie install testpackage
 
-To start the PyPI server::
 
-    $ arnie serve
+Uninstalling Packages
+=====================
+
+To uninstall a package::
+
+    $ arnie uninstall testpackage
 
 
 Uploading Packages
@@ -84,3 +87,14 @@ After incrementing the version number of your project, run::
 
    python setup.py sdist upload -r arnie
 
+
+Serving Packages
+================
+
+To start a temporary local server (http://127.0.0.1:8080), run::
+
+   arnie serve --temp
+
+The main server (http://arnie) is run from an Ubuntu virtual machine::
+
+   sudo arnie serve --port 80

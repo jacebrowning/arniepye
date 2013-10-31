@@ -94,6 +94,7 @@ def main():
 
     clear = ('--clear' in sys.argv)
     run(clear=clear)
+    sys.exit(0)
 
 
 def run(clear=False):

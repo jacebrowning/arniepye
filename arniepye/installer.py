@@ -6,12 +6,15 @@ Wrapper for pip to install packages.
 
 import os
 import sys
+import shutil
 import subprocess
 import logging
 
 import requests
 
 from arniepye import settings
+
+FILES = os.path.join(os.path.dirname(__file__), 'files')
 
 URL = None  # first available PyPI server set at runtime
 
@@ -23,6 +26,9 @@ def install(names, reverse=False):
     @param reverse: uninstall rather than install
     @return: indication of success
     """
+    # Create the installer files
+    _setup()
+
     logging.debug("creating the pip process...")
     process = _pip_uninstall(names) if reverse else _pip_install(names)
     try:
@@ -37,6 +43,15 @@ def install(names, reverse=False):
             process.terminate()
 
     return process.returncode == 0
+
+
+def _setup():
+    """Set up the .pypirc file."""
+    dst = os.path.expanduser(os.path.join('~', '.pypirc'))
+    if not os.path.exists(dst):
+        logging.info("creating '{0}'...".format(dst))
+        src = os.path.join(FILES, 'pypirc')
+        shutil.copy(src, dst)
 
 
 def uninstall(names):

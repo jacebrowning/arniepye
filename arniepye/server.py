@@ -55,7 +55,7 @@ def _setup(path, port):
     """Set up the packages directory."""
     # Create the packages directory
     if not os.path.isdir(path):
-        logging.info("creating packages directory at '{}'...".format(path))
+        logging.info("creating packages directory at '{0}'...".format(path))
         os.mkdir(path)
     # Copy the bootstrap files
     bootstrap = os.path.join(path, 'bootstrap')

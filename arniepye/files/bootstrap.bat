@@ -64,25 +64,21 @@ if exist %PYWIN33_FILE% (
     bitsadmin /transfer Python33-PyWin32 /download /priority normal %PYWIN33_URL% %TEMP%\%PYWIN33_FILE%
 )
 
-if %errorlevel% neq 0 goto :error
-
 
 :: Run the installers
 
-start /wait msiexec /i %PY27_FILE%
-start /wait %PYWIN27_FILE%
+msiexec /i %PY27_FILE%
+start %PYWIN27_FILE%
+pause
 
-start /wait msiexec /i %PY33_FILE%
-start /wait %PYWIN33_FILE%
-
-if %errorlevel% neq 0 goto :error
+msiexec /i %PY33_FILE%
+start %PYWIN33_FILE%
+pause
 
 
 :: Download bootstrap
 
 bitsadmin /transfer ArniePye /download /priority normal %BOOTSTRAP_URL% %TEMP%\%BOOTSTRAP_FILE%
-
-if %errorlevel% neq 0 goto :error
 
 
 :: Bootstrap ArniePye
@@ -96,13 +92,12 @@ if %version% == 27 (
 )
 
 
-if %errorlevel% neq 0 goto :error
-
-
 ::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
 
 
+if %errorlevel% eq 0 goto :end
 :error
-PAUSE
+@echo An error occured during installation.
+pause
 exit /b %errorlevel%
 :end

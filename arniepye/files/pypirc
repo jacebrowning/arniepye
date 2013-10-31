@@ -1,0 +1,14 @@
+[distutils]
+index-servers =
+ arnie
+ local
+
+[arnie]
+repository: http://arnie
+username: dw
+password: dw
+
+[local]
+repository: http://127.0.0.1:8080
+username: dw
+password: dw
