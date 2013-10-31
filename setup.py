@@ -16,7 +16,7 @@ CLIN = CLI + str(sys.version_info[0])
 
 setuptools.setup(
     name=__project__,
-    version='0.1.1-rc.2',
+    version='0.1.1',
 
     description="Wrapper for the PyPI server and PIP installer.",
     url='http://arnie/pypi/ArniePye',
