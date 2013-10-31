@@ -7,6 +7,7 @@ Unit tests for the arniepye.installer module.
 import unittest
 from mock import patch, Mock
 
+import os
 import subprocess
 
 import requests
@@ -31,6 +32,7 @@ class TestInstall(unittest.TestCase):  # pylint: disable=R0904
     def setUp(self):
         installer.URL = None  # reset the known server each test
 
+    @patch('os.path.exists', Mock(return_value=False))
     @patch('subprocess.Popen', MockPopen)
     def test_install(self):
         """Verify install can be called."""

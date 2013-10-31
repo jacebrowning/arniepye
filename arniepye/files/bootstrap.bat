@@ -101,3 +101,5 @@ if %errorlevel% eq 0 goto :end
 pause
 exit /b %errorlevel%
 :end
+@echo Logout to reflect the PATH changes.
+pause
