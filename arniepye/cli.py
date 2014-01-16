@@ -91,7 +91,7 @@ def main(args=None):
     # Run the program
     if args.command:
         function = globals()['_run_' + args.command]
-    else:  # pragma: no cover, Python 2.7 shows the error sonner
+    else:  # pragma: no cover, Python 2.7 shows the error sooner
         parser.print_help()
         parser.exit(1)
     try:

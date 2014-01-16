@@ -81,7 +81,7 @@ def _set_url():
         try:
             logging.debug("testing {0}...".format(URL))
             request = requests.get(URL)
-            if request.status_code == 200:  # pragma: no cover, integration test
+            if request.status_code == 200:  # pragma: no cover, integration test, pylint: disable=C0301
                 logging.info("found server: {0}".format(URL))
                 break
         except requests.exceptions.RequestException:
@@ -97,8 +97,9 @@ def _pip_uninstall(names):
 
 
 def _call(args):
+    """Return a running subprocess.Popen with the given arguments."""
     # Add 'sudo' for a non-Windows, non-root user
-    if os.name != 'nt' and os.geteuid() != 0:  # pragma: no cover, OS-specific
+    if os.name != 'nt' and os.geteuid() != 0:  # pragma: no cover, OS-specific, pylint: disable=E1101
         args.insert(0, 'sudo')
     # Run the command
     logging.debug("$ {0}".format(' '.join(args)))
