@@ -50,6 +50,12 @@ if IS_PYTHON3:
 if not IS_WINDOWS:
     GTK_URL = None
 
+SVN_URL = "http://pysvn.tigris.org/files/documents/1233/49314/py27-pysvn-svn181-1.7.8-1546.exe"
+if IS_PYTHON3:
+    SVN_URL = "http://pysvn.tigris.org/files/documents/1233/49326/py33-pysvn-svn181-1.7.8-1546.exe"
+if not IS_WINDOWS:
+    SVN_URL = None
+
 
 if IS_WINDOWS:
     if IS_PYTHON3:
@@ -120,22 +126,31 @@ def run(clear=False):
     # Install virtualenv using pip
     pip('virtualenv')
 
-    # Install non-pip-installable packages
-    try:
-        import gtk
-    except ImportError:
-        msiexec(download(GTK_URL))
-    # TODO: install PySVN, couldn't find 1.7.1 for Python 2.7?
-
     # Install  ArniePye using pip
     pip('ArniePye', url=SERVER_URL)
 
     # Install "essential" packages with ArniePye
     arnie('pep8')
 
+    # Install non-pip-installable packages
+    msiexec(download(GTK_URL))
+    call(download(SVN_URL))
+
     # Delete the temporary directory
     os.chdir(os.path.dirname(temp))
     shutil.rmtree(temp)
+
+    # Display results
+    print("\nThe following was added to your base Python installation:")
+    print(" - setuptools")
+    print(" - pip")
+    print(" - virtualenv")
+    print(" - arniepye")
+    print(" - pep8")
+    if GTK_URL:
+        print(" - gtk ({0})".format(GTK_URL.rsplit('/', 1)[-1]))
+    if SVN_URL:
+        print(" - pysvn ({0})".format(SVN_URL.rsplit('/', 1)[-1]))
 
 
 def update_paths(clear):
@@ -226,6 +241,13 @@ def msiexec(path):
     """Install an MSI package."""
     if path:
         args = ['msiexec', '/i', path]
+        _call(args)
+
+
+def call(path):
+    """Install an EXE."""
+    if path:
+        args = [path]
         _call(args)
 
 
