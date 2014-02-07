@@ -257,10 +257,11 @@ def call(path):
 
 
 def _call(args):
-    """Call a program with arguemnts."""
-    # Add 'sudo' for a non-Windows, non-root user
-    if not IS_WINDOWS and os.geteuid() != 0:  # pylint: disable=E1101
-        args.insert(0, 'sudo')
+    """Call a program with arguments."""
+    # Add 'sudo' for a non-Windows/Cygwin, non-root user
+    if not (IS_WINDOWS or IS_CYGWIN):
+        if os.geteuid() != 0:  # pylint: disable=E1101
+            args.insert(0, 'sudo')
     # Run the command
     logging.debug("$ {0}".format(' '.join(args)))
     subprocess.call(args)
