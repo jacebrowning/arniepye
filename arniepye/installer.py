@@ -98,9 +98,10 @@ def _pip_uninstall(names):
 
 def _call(args):
     """Return a running subprocess.Popen with the given arguments."""
-    # Add 'sudo' for a non-Windows, non-root user
-    if os.name != 'nt' and os.geteuid() != 0:  # pragma: no cover, OS-specific, pylint: disable=E1101
-        args.insert(0, 'sudo')
+    # Add 'sudo' for a non-Windows/Cygwin, non-root user
+    if sys.platform not in ('win32', 'cygwin'):
+        if os.geteuid() != 0:  # pragma: no cover, OS-specific, pylint: disable=E1101
+            args.insert(0, 'sudo')
     # Run the command
     logging.debug("$ {0}".format(' '.join(args)))
     return subprocess.Popen(args)
