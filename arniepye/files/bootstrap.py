@@ -133,7 +133,7 @@ def run(clear=False):
     pip('ArniePye', url=SERVER_URL)
 
     # Install "essential" packages with ArniePye
-    arnie(ESSENTIALS)
+    arnie(*ESSENTIALS)
 
     # Install non-pip-installable packages
     msiexec(download(GTK_URL))
