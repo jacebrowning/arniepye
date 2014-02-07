@@ -7,7 +7,6 @@ Unit tests for the arniepye.installer module.
 import unittest
 from mock import patch, Mock
 
-import os
 import subprocess
 
 import requests

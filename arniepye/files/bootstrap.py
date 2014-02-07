@@ -1,9 +1,9 @@
 #!/usr/bin/env python
 
 """
-Bootstaps package management for an existing Python 2 or 3 installation.
+Bootstaps package management in an existing Python 2 or 3 installation.
 
-After running this script, install packages using 'arnie:
+After running this script, install packages using 'arnie':
 
     arnie install PackageName
 
@@ -35,7 +35,7 @@ elif IS_WINDOWS:
 else:
     BIN = '/usr/local/bin'
 
-SETUPTOOLS_URL = "https://bitbucket.org/pypa/setuptools/raw/bootstrap/ez_setup.py"
+SETUPTOOLS_URL = "https://bitbucket.org/pypa/setuptools/raw/bootstrap/ez_setup.py"  # pylint: disable=C0301
 EASY_INSTALL = os.path.join(BIN, 'easy_install')
 
 PIP_URL = "https://raw.github.com/pypa/pip/master/contrib/get-pip.py"
@@ -44,27 +44,29 @@ PIP = os.path.join(BIN, 'pip')
 SERVER_URL = 'http://{ADDRESS}/simple/'  # set dynamically on the server
 ARNIE = os.path.join(BIN, 'arnie3' if IS_PYTHON3 else 'arnie2')
 
-GTK_URL = "http://ftp.gnome.org/pub/GNOME/binaries/win32/pygtk/2.24/pygtk-all-in-one-2.24.0.win32-py2.7.msi"
+GTK_URL = "http://ftp.gnome.org/pub/GNOME/binaries/win32/pygtk/2.24/pygtk-all-in-one-2.24.0.win32-py2.7.msi"  # pylint: disable=C0301
 if IS_PYTHON3:
     GTK_URL = None
 if not IS_WINDOWS:
     GTK_URL = None
 
-SVN_URL = "http://pysvn.tigris.org/files/documents/1233/49314/py27-pysvn-svn181-1.7.8-1546.exe"
+SVN_URL = "http://pysvn.tigris.org/files/documents/1233/49314/py27-pysvn-svn181-1.7.8-1546.exe"  # pylint: disable=C0301
 if IS_PYTHON3:
-    SVN_URL = "http://pysvn.tigris.org/files/documents/1233/49326/py33-pysvn-svn181-1.7.8-1546.exe"
+    SVN_URL = "http://pysvn.tigris.org/files/documents/1233/49326/py33-pysvn-svn181-1.7.8-1546.exe"  # pylint: disable=C0301
 if not IS_WINDOWS:
     SVN_URL = None
 
 
 if IS_WINDOWS:
     if IS_PYTHON3:
-        import winreg
+        import winreg  # pylint: disable=F0401
     else:
-        import _winreg as winreg
+        import _winreg as winreg  # pylint: disable=F0401
+
+ESSENTIALS = 'pep8', 'pylint', 'nose', 'coverage'
 
 
-# http://code.activestate.com/recipes/577621-manage-environment-variables-on-windows/
+# http://code.activestate.com/recipes/577621-manage-environment-variables-on-windows
 class Win32Environment(object):
     """Utility class to get/set windows environment variable"""
 
@@ -76,7 +78,7 @@ class Win32Environment(object):
             self.subkey = 'Environment'
         else:
             self.root = winreg.HKEY_LOCAL_MACHINE
-            self.subkey = r'SYSTEM\CurrentControlSet\Control\Session Manager\Environment'
+            self.subkey = r'SYSTEM\CurrentControlSet\Control\Session Manager\Environment'  # pylint: disable=C0301
 
     def get(self, name):
         """Get an an environment variable."""
@@ -104,7 +106,8 @@ def main():
 
 
 def run(clear=False):
-    """Install setuptools, pip, arniepye, and non-pip components.
+    """Install setuptools, pip, ArniePye, and non-pip components.
+
     On Windows, add Python to the user PATH variable.
 
     @param clear: remove all Python paths from the Windows PATH first
@@ -130,7 +133,7 @@ def run(clear=False):
     pip('ArniePye', url=SERVER_URL)
 
     # Install "essential" packages with ArniePye
-    arnie('pep8')
+    arnie(ESSENTIALS)
 
     # Install non-pip-installable packages
     msiexec(download(GTK_URL))
@@ -145,8 +148,9 @@ def run(clear=False):
     print(" - setuptools")
     print(" - pip")
     print(" - virtualenv")
-    print(" - arniepye")
-    print(" - pep8")
+    print(" - ArniePye")
+    for name in ESSENTIALS:
+        print(" - {0}".format(name))
     if GTK_URL:
         print(" - gtk ({0})".format(GTK_URL.rsplit('/', 1)[-1]))
     if SVN_URL:
@@ -154,6 +158,7 @@ def run(clear=False):
 
 
 def update_paths(clear):
+    """Add Python## and Python##/Scripts to the Windows PATH."""
     if IS_WINDOWS and not IS_CYGWIN:
 
         base = r"C:\Python"
@@ -198,7 +203,7 @@ def download(url, path=None):
         response = urllib.request.urlopen(url)
         data = response.read()
     else:
-        import urllib2
+        import urllib2  # pylint: disable=F0401
         response = urllib2.urlopen(url)
         data = response.read()
 
@@ -252,8 +257,9 @@ def call(path):
 
 
 def _call(args):
+    """Call a program with arguemnts."""
     # Add 'sudo' for a non-Windows, non-root user
-    if not IS_WINDOWS and os.geteuid() != 0:
+    if not IS_WINDOWS and os.geteuid() != 0:  # pylint: disable=E1101
         args.insert(0, 'sudo')
     # Run the command
     logging.debug("$ {0}".format(' '.join(args)))

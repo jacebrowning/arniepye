@@ -1,5 +1,5 @@
 ::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
-:: Bootstaps a Python 2 and 3 installation from nothing.
+:: Bootstaps a Python 2 and 3 installation + package management on Windows.
 ::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
 
 
