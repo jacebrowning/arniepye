@@ -8,7 +8,7 @@ import sys
 
 import setuptools
 
-from arniepye import __project__, CLI
+from arniepye import __project__, __version__, CLI
 
 # Append the Python main version number to the end of the CLI name
 CLIN = CLI + str(sys.version_info[0])
@@ -16,7 +16,7 @@ CLIN = CLI + str(sys.version_info[0])
 
 setuptools.setup(
     name=__project__,
-    version='0.2.2',
+    version=__version__,
 
     description="Wrapper for the PyPI server and PIP installer.",
     url='http://arnie/pypi/ArniePye',

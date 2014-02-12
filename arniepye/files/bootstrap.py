@@ -124,10 +124,10 @@ def run(clear=False):
     python(download(SETUPTOOLS_URL))
 
     # Install pip using setuptools
-    easy_install('pip')
+    easy_install('pip==1.5.2')
 
     # Install virtualenv using pip
-    pip('virtualenv')
+    pip('virtualenv==1.10')
 
     # Install  ArniePye using pip
     pip('ArniePye', url=SERVER_URL)
