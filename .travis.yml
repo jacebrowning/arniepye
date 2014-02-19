@@ -1,0 +1,9 @@
+language: python
+python:
+  - 3.2
+  - 3.3
+install:
+  - pip install coveralls
+script: make pep8 test tests
+after_success:
+  - coveralls

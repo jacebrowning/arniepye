@@ -12,6 +12,7 @@ SERVER_URLS = [
     'http://arnie/simple/',  # main server
     'http://arnie-dev/simple/',  # development server
     'http://127.0.0.1:8080/simple/',  # local server
+    'http://172.27.1.52/simple/',  # IP address of main server (DNS fallback)
 ]
 FALLBACK_URLS = [
     'https://pypi.python.org/simple/',

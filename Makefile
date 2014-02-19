@@ -1,25 +1,28 @@
 PROJECT := ArniePye
 PACKAGE := arniepye
-SOURCES := Makefile setup.py $(shell find $(PACKAGE) -name '*.py')
+SOURCES := Makefile setup.py
 
 ENV := env
 DEPENDS := $(ENV)/.depends
 EGG_INFO := $(subst -,_,$(PROJECT)).egg-info
 
-ifeq ($(OS),Windows_NT)
-    SYS_PYTHON := C:\\Python33\\python.exe
-    SYS_VIRTUALENV := C:\\Python33\\Scripts\\virtualenv.exe
-    BIN := $(ENV)/Scripts
+PLATFORM := $(shell python -c 'import sys; print(sys.platform)')
+
+ifneq ($(findstring win32, $(PLATFORM)), )
+	SYS_PYTHON := C:\\Python33\\python.exe
+	SYS_VIRTUALENV := C:\\Python33\\Scripts\\virtualenv.exe
+	BIN := $(ENV)/Scripts
 	EXE := .exe
 	OPEN := cmd /c start
 	# https://bugs.launchpad.net/virtualenv/+bug/449537
 	export TCL_LIBRARY=C:\\Python33\\tcl\\tcl8.5
 else
-    SYS_PYTHON := python3
-    SYS_VIRTUALENV := virtualenv
-    BIN := $(ENV)/bin
+	SYS_PYTHON := python3
+	SYS_VIRTUALENV := virtualenv
+	BIN := $(ENV)/bin
 	OPEN := open
 endif
+
 MAN := man
 SHARE := share
 
@@ -38,7 +41,7 @@ all: env
 
 .PHONY: env
 env: .virtualenv $(EGG_INFO)
-$(EGG_INFO): $(SOURCES)
+$(EGG_INFO): Makefile setup.py
 	$(PYTHON) setup.py develop
 	touch $(EGG_INFO)  # flag to indicate package is installed
 
@@ -50,7 +53,7 @@ $(PIP):
 .PHONY: depends
 depends: .virtualenv $(DEPENDS) Makefile
 $(DEPENDS):
-	$(PIP) install docutils pdoc pep8 pylint nose coverage wheel
+	$(PIP) install docutils pdoc pep8 pylint nose coverage wheel mock
 	touch $(DEPENDS)  # flag to indicate dependencies are installed
 
 # Documentation ##############################################################
@@ -59,27 +62,30 @@ $(DEPENDS):
 doc: readme apidocs
 
 .PHONY: readme
-readme: depends docs/README.html
-docs/README.html: README.rst
-	$(PYTHON) $(RST2HTML) README.rst docs/README.html
+readme: depends docs/README-github.html docs/README-pypi.html
+docs/README-github.html: README.md
+	pandoc -f markdown_github -t html -o docs/README-github.html README.md
+docs/README-pypi.html: README.rst
+	$(PYTHON) $(RST2HTML) README.rst docs/README-pypi.html
+README.rst: README.md
+	pandoc -f markdown_github -t rst -o README.rst README.md
 
 .PHONY: apidocs
 apidocs: depends apidocs/$(PACKAGE)/index.html
 apidocs/$(PACKAGE)/index.html: $(SOURCES)
 	$(PYTHON) $(PDOC) --html --overwrite $(PACKAGE) --html-dir apidocs
 
-
-
 .PHONY: read
 read: doc
 	$(OPEN) apidocs/$(PACKAGE)/index.html
-	$(OPEN) docs/README.html
+	$(OPEN) docs/README-pypi.html
+	$(OPEN) docs/README-github.html
 
 # Static Analysis ############################################################
 
 .PHONY: pep8
 pep8: depends
-	$(PEP8) $(PACKAGE) --ignore=E501 
+	$(PEP8) $(PACKAGE) --ignore=E501
 
 .PHONY: pylint
 pylint: depends
@@ -103,15 +109,13 @@ test: env depends
 tests: env depends
 	TEST_INTEGRATION=1 $(NOSE) --verbose --stop --cover-package=$(PACKAGE)
 
-
-
 # Cleanup ####################################################################
 
 .PHONY: clean
 clean: .clean-dist .clean-test .clean-doc .clean-build
 
 .PHONY: clean-all
-clean-all: clean .clean-env 
+clean-all: clean .clean-env
 
 .PHONY: .clean-env
 .clean-env:
@@ -125,7 +129,7 @@ clean-all: clean .clean-env
 
 .PHONY: .clean-doc
 .clean-doc:
-	rm -rf apidocs docs/README*.html
+	rm -rf apidocs docs/README*.html README.rst
 
 .PHONY: .clean-test
 .clean-test:
@@ -142,16 +146,16 @@ dist: env depends check test tests doc
 	$(PYTHON) setup.py sdist
 	$(PYTHON) setup.py bdist_wheel
 	$(MAKE) read
- 
+
 .PHONY: upload
 upload: env depends doc
-	$(PYTHON) setup.py sdist upload -r arnie
+	$(PYTHON) setup.py register sdist upload
+	$(PYTHON) setup.py bdist_wheel upload
 	$(MAKE) dev  # restore the development environment
 
 .PHONY: dev
 dev:
 	python setup.py develop
-
 
 # Demo #######################################################################
 
