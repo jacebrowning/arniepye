@@ -19,5 +19,5 @@ def uninstall(*args, **kwargs):
 
 
 def serve(*args, **kwargs):
-    """Wraps main server entry poing."""
+    """Wraps main server entry point."""
     return server.run(*args, **kwargs)

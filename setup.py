@@ -8,15 +8,22 @@ import sys
 
 import setuptools
 
-from arniepye import __project__, CLI
+from arniepye import __project__, __version__, CLI
 
 # Append the Python main version number to the end of the CLI name
 CLIN = CLI + str(sys.version_info[0])
 
+import os
+if os.path.exists('README.rst'):
+    README = open('README.rst').read()
+else:
+    README = ""  # a placeholder, readme is generated on release
+CHANGES = open('CHANGES.md').read()
+
 
 setuptools.setup(
     name=__project__,
-    version='0.2.2',
+    version=__version__,
 
     description="Wrapper for the PyPI server and PIP installer.",
     url='http://arnie/pypi/ArniePye',
@@ -29,7 +36,8 @@ setuptools.setup(
     entry_points={'console_scripts': [CLI + ' = arniepye.cli:main',
                                       CLIN + ' = arniepye.cli:main']},
 
-    long_description=open('README.rst').read(),
+    long_description=(README + '\n' + CHANGES),
+    license='<TBD>',
 
     install_requires=["pypiserver==1.1.3", "pip==1.4.1",
                       "passlib", "requests", "mock"],

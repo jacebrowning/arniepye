@@ -2,21 +2,27 @@ PROJECT := ArniePye
 PACKAGE := arniepye
 SOURCES := Makefile setup.py
 
-CACHE := .cache
-VIRTUALENV := env
-DEPENDS := $(VIRTUALENV)/.depends
+ENV := env
+DEPENDS := $(ENV)/.depends
 EGG_INFO := $(subst -,_,$(PROJECT)).egg-info
 
-ifeq ($(OS),Windows_NT)
-VERSION := C:\\Python33\\python.exe
-BIN := $(VIRTUALENV)/Scripts
-EXE := .exe
-OPEN := cmd /c start
+PLATFORM := $(shell python -c 'import sys; print(sys.platform)')
+
+ifneq ($(findstring win32, $(PLATFORM)), )
+	SYS_PYTHON := C:\\Python33\\python.exe
+	SYS_VIRTUALENV := C:\\Python33\\Scripts\\virtualenv.exe
+	BIN := $(ENV)/Scripts
+	EXE := .exe
+	OPEN := cmd /c start
+	# https://bugs.launchpad.net/virtualenv/+bug/449537
+	export TCL_LIBRARY=C:\\Python33\\tcl\\tcl8.5
 else
-VERSION := python3
-BIN := $(VIRTUALENV)/bin
-OPEN := open
+	SYS_PYTHON := python3
+	SYS_VIRTUALENV := virtualenv
+	BIN := $(ENV)/bin
+	OPEN := open
 endif
+
 MAN := man
 SHARE := share
 
@@ -31,122 +37,125 @@ NOSE := $(BIN)/nosetests$(EXE)
 # Installation ###############################################################
 
 .PHONY: all
-all: develop
+all: env
 
-.PHONY: develop
-develop: .env $(EGG_INFO)
-$(EGG_INFO): $(SOURCES)
+.PHONY: env
+env: .virtualenv $(EGG_INFO)
+$(EGG_INFO): Makefile setup.py
 	$(PYTHON) setup.py develop
 	touch $(EGG_INFO)  # flag to indicate package is installed
 
-.PHONY: .env
-.env: $(PYTHON)
-$(PYTHON):
-	virtualenv --python $(VERSION) $(VIRTUALENV)
+.PHONY: .virtualenv
+.virtualenv: $(PIP)
+$(PIP):
+	$(SYS_VIRTUALENV) --python $(SYS_PYTHON) $(ENV)
 
 .PHONY: depends
-depends: .env $(DEPENDS) $(SOURCES)
+depends: .virtualenv $(DEPENDS) Makefile
 $(DEPENDS):
-	$(PIP) install docutils pdoc pep8 nose coverage --download-cache=$(CACHE)
-	$(MAKE) .pylint
+	$(PIP) install docutils pdoc pep8 pylint nose coverage wheel mock
 	touch $(DEPENDS)  # flag to indicate dependencies are installed
-
-# issue: pylint is not currently installing on Windows
-# tracker: https://bitbucket.org/logilab/pylint/issue/51/building-pylint-windows-installer-for
-# workaround: skip pylint on windows
-.PHONY: .pylint
-ifeq ($(shell uname),Windows)
-.pylint: .env
-	@echo WARNING: pylint cannot be installed on Windows
-else ifeq ($(shell uname),CYGWIN_NT-6.1)
-.pylint: .env
-	@echo WARNING: pylint cannot be installed on Cygwin
-else
-.pylint: .env
-	$(PIP) install pylint --download-cache=$(CACHE)
-endif
 
 # Documentation ##############################################################
 
 .PHONY: doc
-doc: depends
-	$(PYTHON) $(RST2HTML) README.rst docs/README.html
+doc: readme apidocs
+
+.PHONY: readme
+readme: depends docs/README-github.html docs/README-pypi.html
+docs/README-github.html: README.md
+	pandoc -f markdown_github -t html -o docs/README-github.html README.md
+docs/README-pypi.html: README.rst
+	$(PYTHON) $(RST2HTML) README.rst docs/README-pypi.html
+README.rst: README.md
+	pandoc -f markdown_github -t rst -o README.rst README.md
+
+.PHONY: apidocs
+apidocs: depends apidocs/$(PACKAGE)/index.html
+apidocs/$(PACKAGE)/index.html: $(SOURCES)
 	$(PYTHON) $(PDOC) --html --overwrite $(PACKAGE) --html-dir apidocs
 
-.PHONY: doc-open
-doc-open: doc
-	$(OPEN) docs/README.html
+.PHONY: read
+read: doc
 	$(OPEN) apidocs/$(PACKAGE)/index.html
+	$(OPEN) docs/README-pypi.html
+	$(OPEN) docs/README-github.html
 
 # Static Analysis ############################################################
 
 .PHONY: pep8
 pep8: depends
-	$(PEP8) $(PACKAGE) --ignore=E501 
+	$(PEP8) $(PACKAGE) --ignore=E501
 
-# issue: pylint is not currently installing on Windows
-# tracker: https://bitbucket.org/logilab/pylint/issue/51/building-pylint-windows-installer-for
-# workaround: skip pylint on windows
 .PHONY: pylint
-ifeq ($(shell uname),Windows)
-pylint: depends
-	@echo pylint cannot be run on Windows
-else ifeq ($(shell uname),CYGWIN_NT-6.1)
-pylint: depends
-	@echo pylint cannot be run on Cygwin
-else
 pylint: depends
 	$(PYLINT) $(PACKAGE) --reports no \
-	                     --msg-template="{msg_id}: {msg}: {obj} line:{line}" \
-	                     --max-line-length=99 \
+	                     --msg-template="{msg_id}:{line:3d},{column}:{msg}" \
+	                     --max-line-length=79 \
 	                     --disable=I0011,W0142,W0511,R0801
-endif
 
 .PHONY: check
 check: depends
-	$(MAKE) doc
 	$(MAKE) pep8
 	$(MAKE) pylint
 
 # Testing ####################################################################
 
 .PHONY: test
-test: develop depends
+test: env depends
 	$(NOSE)
 
 .PHONY: tests
-tests: develop depends
-	TEST_INTEGRATION=1 $(NOSE) --verbose --stop --cover-package $(PACKAGE)
+tests: env depends
+	TEST_INTEGRATION=1 $(NOSE) --verbose --stop --cover-package=$(PACKAGE)
 
 # Cleanup ####################################################################
 
+.PHONY: clean
+clean: .clean-dist .clean-test .clean-doc .clean-build
+
+.PHONY: clean-all
+clean-all: clean .clean-env
+
 .PHONY: .clean-env
 .clean-env:
-	rm -rf $(VIRTUALENV)
+	rm -rf $(ENV)
+
+.PHONY: .clean-build
+.clean-build:
+	find $(PACKAGE) -name '*.pyc' -delete
+	find $(PACKAGE) -name '__pycache__' -delete
+	rm -rf *.egg-info
+
+.PHONY: .clean-doc
+.clean-doc:
+	rm -rf apidocs docs/README*.html README.rst
+
+.PHONY: .clean-test
+.clean-test:
+	rm -rf .coverage
 
 .PHONY: .clean-dist
 .clean-dist:
-	rm -rf dist build *.egg-info 
-
-.PHONY: clean
-clean: .clean-env .clean-dist
-	rm -rf */*.pyc */*/*.pyc */*/*/*.pyc */*/*/*/*.pyc
-	rm -rf */__pycache__ */*/__pycache__ */*/*/__pycache__ */*/*/*/__pycache__
-	rm -rf apidocs docs/README.html .coverage
-
-.PHONY: clean-all
-clean-all: clean
-	rm -rf $(CACHE)
+	rm -rf dist build
 
 # Release ####################################################################
 
 .PHONY: dist
-dist: .clean-dist
+dist: env depends check test tests doc
 	$(PYTHON) setup.py sdist
+	$(PYTHON) setup.py bdist_wheel
+	$(MAKE) read
 
 .PHONY: upload
-upload: .clean-dist
-	$(PYTHON) setup.py sdist upload -r arnie
+upload: env depends doc
+	$(PYTHON) setup.py register sdist upload
+	$(PYTHON) setup.py bdist_wheel upload
+	$(MAKE) dev  # restore the development environment
+
+.PHONY: dev
+dev:
+	python setup.py develop
 
 # Demo #######################################################################
 
