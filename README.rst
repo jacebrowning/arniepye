@@ -2,7 +2,10 @@ Introduction
 ============
 
 ArniePye is a wrapper for ``pypiserver`` and ``pip`` to provide an
-installer and server for local and public Python packages.
+installer and server for local and public Python packages. It also provides boostrapping scripts to:
+
+- install itself into a an existing Python
+- install Python (and itself) on a Windows computer from nothing
 
 
 Getting Started
