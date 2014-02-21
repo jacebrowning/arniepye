@@ -37,7 +37,7 @@ setuptools.setup(
                                       CLIN + ' = arniepye.cli:main']},
 
     long_description=(README + '\n' + CHANGES),
-    license='<TBD>',
+    license='LGPL',
 
     install_requires=["pypiserver==1.1.3", "pip==1.4.1",
                       "passlib", "requests", "mock"],
