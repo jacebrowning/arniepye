@@ -85,7 +85,7 @@ class Win32Environment(object):
         key = winreg.OpenKey(self.root, self.subkey, 0, winreg.KEY_READ)
         try:
             value, _ = winreg.QueryValueEx(key, name)
-        except WindowsError:
+        except WindowsError:  # pylint: disable=E0602
             value = ''
         return value
 
