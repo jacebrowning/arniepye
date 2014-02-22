@@ -36,7 +36,7 @@ If Python is not installed, run `bootstrap.bat` instead:
     wget http://<SERVER>/packages/bootstrap/bootstrap.bat
     bootstrap.bat
 
-ArniePye can be installed with itself after bootstrapping:
+ArniePye can be updated with itself after bootstrapping:
 
     arnie install ArniePye
 
