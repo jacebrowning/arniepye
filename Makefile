@@ -3,7 +3,8 @@ PACKAGE := arniepye
 SOURCES := Makefile setup.py
 
 ENV := env
-DEPENDS := $(ENV)/.depends
+DEPENTS_CI := $(ENV)/.depends.ci
+DEPENDS_DEV := $(ENV)/.depends.dev
 EGG_INFO := $(subst -,_,$(PROJECT)).egg-info
 
 PLATFORM := $(shell python -c 'import sys; print(sys.platform)')
@@ -20,7 +21,11 @@ else
 	SYS_PYTHON := python3
 	SYS_VIRTUALENV := virtualenv
 	BIN := $(ENV)/bin
-	OPEN := open
+	ifneq ($(findstring cygwin, $(PLATFORM)), )
+		OPEN := cygstart
+	else
+		OPEN := open
+	endif
 endif
 
 MAN := man
@@ -31,6 +36,7 @@ PIP := $(BIN)/pip$(EXE)
 RST2HTML := $(BIN)/rst2html.py
 PDOC := $(BIN)/pdoc
 PEP8 := $(BIN)/pep8$(EXE)
+PEP257 := $(BIN)/pep257$(EXE)
 PYLINT := $(BIN)/pylint$(EXE)
 NOSE := $(BIN)/nosetests$(EXE)
 
@@ -51,10 +57,19 @@ $(PIP):
 	$(SYS_VIRTUALENV) --python $(SYS_PYTHON) $(ENV)
 
 .PHONY: depends
-depends: .virtualenv $(DEPENDS) Makefile
-$(DEPENDS):
-	$(PIP) install docutils pdoc pep8 pylint nose coverage wheel mock
-	touch $(DEPENDS)  # flag to indicate dependencies are installed
+depends: .depends-ci .depends-dev
+
+.PHONY: .depends-ci
+.depends-ci: .virtualenv Makefile $(DEPENTS_CI)
+$(DEPENTS_CI): Makefile
+	$(PIP) install pep8 pep257 nose coverage
+	touch $(DEPENTS_CI)  # flag to indicate dependencies are installed
+
+.PHONY: .depends-dev
+.depends-dev: .virtualenv Makefile $(DEPENDS_DEV)
+$(DEPENDS_DEV): Makefile
+	$(PIP) install docutils pdoc pylint wheel
+	touch $(DEPENDS_DEV)  # flag to indicate dependencies are installed
 
 # Documentation ##############################################################
 
@@ -62,7 +77,7 @@ $(DEPENDS):
 doc: readme apidocs
 
 .PHONY: readme
-readme: depends docs/README-github.html docs/README-pypi.html
+readme: .depends-ci docs/README-github.html docs/README-pypi.html
 docs/README-github.html: README.md
 	pandoc -f markdown_github -t html -o docs/README-github.html README.md
 docs/README-pypi.html: README.rst
@@ -71,7 +86,7 @@ README.rst: README.md
 	pandoc -f markdown_github -t rst -o README.rst README.md
 
 .PHONY: apidocs
-apidocs: depends apidocs/$(PACKAGE)/index.html
+apidocs: .depends-ci apidocs/$(PACKAGE)/index.html
 apidocs/$(PACKAGE)/index.html: $(SOURCES)
 	$(PYTHON) $(PDOC) --html --overwrite $(PACKAGE) --html-dir apidocs
 
@@ -84,30 +99,35 @@ read: doc
 # Static Analysis ############################################################
 
 .PHONY: pep8
-pep8: depends
+pep8: env .depends-ci
 	$(PEP8) $(PACKAGE) --ignore=E501
 
+.PHONY: pep257
+pep257: env .depends-ci
+	$(PEP257) $(PACKAGE) --ignore=E501
+
 .PHONY: pylint
-pylint: depends
+pylint: env .depends-ci
 	$(PYLINT) $(PACKAGE) --reports no \
 	                     --msg-template="{msg_id}:{line:3d},{column}:{msg}" \
 	                     --max-line-length=79 \
 	                     --disable=I0011,W0142,W0511,R0801
 
 .PHONY: check
-check: depends
-	$(MAKE) pep8
-	$(MAKE) pylint
+check: pep8 pylint
 
 # Testing ####################################################################
 
 .PHONY: test
-test: env depends
+test: env .depends-ci
 	$(NOSE)
 
 .PHONY: tests
-tests: env depends
+tests: env .depends-ci
 	TEST_INTEGRATION=1 $(NOSE) --verbose --stop --cover-package=$(PACKAGE)
+
+.PHONY: ci
+ci: pep8 test tests
 
 # Cleanup ####################################################################
 
@@ -141,14 +161,25 @@ clean-all: clean .clean-env
 
 # Release ####################################################################
 
+.PHONY: .git-no-changes
+.git-no-changes:
+	@if git diff --name-only --exit-code;         \
+	then                                          \
+		echo Git working copy is clean...;        \
+	else                                          \
+		echo ERROR: Git working copy is dirty!;   \
+		echo Commit your changes and try again.;  \
+		exit -1;                                  \
+	fi;
+
 .PHONY: dist
-dist: env depends check test tests doc
+dist: .git-no-changes env depends check test tests doc
 	$(PYTHON) setup.py sdist
 	$(PYTHON) setup.py bdist_wheel
 	$(MAKE) read
 
 .PHONY: upload
-upload: env depends doc
+upload: .git-no-changes env depends doc
 	$(PYTHON) setup.py register sdist upload
 	$(PYTHON) setup.py bdist_wheel upload
 	$(MAKE) dev  # restore the development environment

@@ -33,7 +33,7 @@ class TestCLI(unittest.TestCase):  # pylint: disable=R0904
         """Verify an error occurs when no package specified to uninstall."""
         self.assertRaises(SystemExit, cli, ['uninstall'])
 
-    @patch('os.geteuid', Mock(return_value=0))
+    @patch('sys.platform', 'win32')
     def test_install_uninstall(self):
         """Verify the install/uninstall CLI can be called."""
         self.assertIs(None, cli(['install', 'testpackage']))
@@ -74,7 +74,7 @@ class TestLogging(unittest.TestCase):  # pylint: disable=R0904
 class TestMain(unittest.TestCase):  # pylint: disable=R0904
     """Integration tests for the ArniePye main entry points."""
 
-    @patch('os.geteuid', Mock(return_value=0))
+    @patch('sys.platform', 'win32')
     def test_install_uninstall(self):
         """Verify a package can be installed."""
         self.assertTrue(main.install(['testpackage']))
