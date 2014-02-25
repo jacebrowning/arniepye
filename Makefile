@@ -114,7 +114,7 @@ pylint: env .depends-ci
 	                     --disable=I0011,W0142,W0511,R0801
 
 .PHONY: check
-check: pep8 pylint
+check: pep8 pep257 pylint
 
 # Testing ####################################################################
 

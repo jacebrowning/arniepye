@@ -1,8 +1,6 @@
 #!/usr/bin/env python
 
-"""
-Unit tests for the arniepye.installer module.
-"""
+"""Unit tests for the arniepye.installer module."""
 
 import unittest
 from mock import patch, Mock
@@ -15,9 +13,11 @@ from arniepye import installer
 
 
 class MockPopen(Mock):
+
     """Mock subprocess.Popen for testing."""
 
     def __init__(self, *args, **kwargs):
+        """Set up mocking for subprocess.Popen."""
         super(MockPopen, self).__init__(*args, **kwargs)
         self.poll = Mock(return_value=0)
         self.terminate = Mock()
@@ -26,9 +26,11 @@ class MockPopen(Mock):
 
 @patch('requests.get', Mock(side_effect=requests.exceptions.RequestException))  # pylint: disable=R0904
 class TestInstall(unittest.TestCase):  # pylint: disable=R0904
+
     """Unit tests for the install function."""  # pylint: disable=C0103,W0212
 
     def setUp(self):
+        """Run setup for each test method."""
         installer.URL = None  # reset the known server each test
 
     @patch('os.path.exists', Mock(return_value=False))

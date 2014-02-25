@@ -1,8 +1,6 @@
 #!/usr/bin/env python
 
-"""
-Tests for the arniepye package.
-"""
+"""Tests for the arniepye package."""
 
 import os
 
