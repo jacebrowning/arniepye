@@ -36,7 +36,7 @@ PIP := $(BIN)/pip$(EXE)
 RST2HTML := $(BIN)/rst2html.py
 PDOC := $(BIN)/pdoc
 PEP8 := $(BIN)/pep8$(EXE)
-PEP257 := $(BIN)/pep257$(EXE)
+PEP257 := $(BIN)/pep257
 PYLINT := $(BIN)/pylint$(EXE)
 NOSE := $(BIN)/nosetests$(EXE)
 
