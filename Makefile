@@ -107,14 +107,14 @@ pep257: env .depends-ci
 	$(PEP257) $(PACKAGE) --ignore=E501
 
 .PHONY: pylint
-pylint: env .depends-ci
+pylint: env .depends-dev
 	$(PYLINT) $(PACKAGE) --reports no \
 	                     --msg-template="{msg_id}:{line:3d},{column}:{msg}" \
 	                     --max-line-length=79 \
 	                     --disable=I0011,W0142,W0511,R0801
 
 .PHONY: check
-check: pep8 pylint
+check: pep8 pep257 pylint
 
 # Testing ####################################################################
 
