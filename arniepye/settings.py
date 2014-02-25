@@ -1,8 +1,6 @@
 #!/usr/bin/env python
 
-"""
-Settings for ArniePye.
-"""
+"""Settings for ArniePye."""
 
 import os
 import logging

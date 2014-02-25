@@ -1,8 +1,6 @@
 #!/usr/bin/env python
 
-"""
-Wrapper for pip to install packages.
-"""
+"""Wrapper for pip to install packages."""
 
 import os
 import sys
@@ -25,6 +23,7 @@ def install(names, reverse=False):
     @param names: project names to install
     @param reverse: uninstall rather than install
     @return: indication of success
+
     """
     # Create the installer files
     _setup()
@@ -59,13 +58,13 @@ def uninstall(names):
 
     @param names: project names to uninstall
     @return: indication of success
+
     """
     return install(names, reverse=True)
 
 
 def _pip_install(names):
     """Start and return a PIP install subprocess."""
-
     if URL is None:
         _set_url()
 
@@ -80,7 +79,7 @@ def _set_url():
     for URL in settings.SERVER_URLS + settings.FALLBACK_URLS:
         try:
             logging.debug("testing {0}...".format(URL))
-            request = requests.get(URL)
+            request = requests.get(URL, timeout=5)
             if request.status_code == 200:  # pragma: no cover, integration test, pylint: disable=C0301
                 logging.info("found server: {0}".format(URL))
                 break

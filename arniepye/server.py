@@ -1,8 +1,6 @@
 #!/usr/bin/env python
 
-"""
-Wrapper for pypiserver to serve packages.
-"""
+"""Wrapper for pypiserver to serve packages."""
 
 import os
 import sys
@@ -19,8 +17,7 @@ ADDRESS = '{ADDRESS}'  # constant in bootstrap files to be replaced
 
 
 def run(port=8080, path=settings.PACKAGES_DIR, forever=True, temp=False):
-    """Create a packages directory and run the server forever.
-    """
+    """Create a packages directory and run the server forever."""
     # Create the server files
     _setup(path, port)
 

@@ -1,8 +1,6 @@
 #!/usr/bin/env python
 
-"""
-Installs Python packages from a package server.
-"""
+"""Installs Python packages from a package server."""
 
 import os
 import sys
@@ -15,15 +13,22 @@ from arniepye import main as _main
 
 
 class _HelpFormatter(argparse.HelpFormatter):
+
     """Command-line help text formatter with wider help text."""
+
     def __init__(self, *args, **kwargs):
         super(_HelpFormatter, self).__init__(*args, max_help_position=32,
                                              **kwargs)
 
 
 class _WarningFormatter(logging.Formatter, object):
-    """Logging formatter that always displays a verbose logging
-    format for logging level WARNING or higher."""
+
+    """Logging warning formatter.
+
+    Logging formatter that always displays a verbose logging
+    format for logging level WARNING or higher.
+
+    """
 
     def __init__(self, default_format, verbose_format, *args, **kwargs):
         super(_WarningFormatter, self).__init__(*args, **kwargs)
@@ -47,6 +52,7 @@ def main(args=None):
     """Process command-line arguments and run the program.
 
     @param args: manually override arguments
+
     """
     # Debug parser
     debug = argparse.ArgumentParser(add_help=False)
@@ -105,7 +111,6 @@ def main(args=None):
 
 def _configure_logging(verbosity=0):
     """Configure logging using the provided verbosity level (0+)."""
-
     # Configure the logging level and format
     if verbosity >= 1:
         level = settings.VERBOSE_LOGGING_LEVEL
@@ -128,9 +133,11 @@ def _configure_logging(verbosity=0):
 
 def _run_install(args, cwd, error):
     """Process arguments and run the `install` subcommand.
+
     @param args: Namespace of CLI arguments
     @param cwd: current working directory
     @param error: function to call for CLI errors
+
     """
     logging.debug("unused arguments: {0}".format((cwd, error)))
     return _main.install(args.name)
@@ -138,9 +145,11 @@ def _run_install(args, cwd, error):
 
 def _run_uninstall(args, cwd, error):
     """Process arguments and run the `uninstall` subcommand.
+
     @param args: Namespace of CLI arguments
     @param cwd: current working directory
     @param error: function to call for CLI errors
+
     """
     logging.debug("unused arguments: {0}".format((cwd, error)))
     return _main.uninstall(args.name)
@@ -148,9 +157,11 @@ def _run_uninstall(args, cwd, error):
 
 def _run_serve(args, cwd, error):
     """Process arguments and run the `serve` subcommand.
+
     @param args: Namespace of CLI arguments
     @param cwd: current working directory
     @param error: function to call for CLI errors
+
     """
     logging.debug("unused arguments: {0}".format((cwd, error)))
     return _main.serve(port=args.port, forever=not args.test, temp=args.temp)

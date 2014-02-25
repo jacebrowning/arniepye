@@ -68,9 +68,11 @@ ESSENTIALS = 'pep8', 'pylint', 'nose', 'coverage'
 
 # http://code.activestate.com/recipes/577621-manage-environment-variables-on-windows
 class Win32Environment(object):
-    """Utility class to get/set windows environment variable"""
+
+    """Utility class to get/set windows environment variable."""
 
     def __init__(self, scope):
+        """Set up registry info."""
         assert scope in ('user', 'system')
         self.scope = scope
         if scope == 'user':
@@ -85,7 +87,7 @@ class Win32Environment(object):
         key = winreg.OpenKey(self.root, self.subkey, 0, winreg.KEY_READ)
         try:
             value, _ = winreg.QueryValueEx(key, name)
-        except WindowsError:
+        except WindowsError:  # pylint: disable=E0602
             value = ''
         return value
 
@@ -99,7 +101,6 @@ class Win32Environment(object):
 
 def main():
     """Process command-line arguments and run the program."""
-
     clear = ('--clear' in sys.argv)
     run(clear=clear)
     sys.exit(0)
@@ -111,6 +112,7 @@ def run(clear=False):
     On Windows, add Python to the user PATH variable.
 
     @param clear: remove all Python paths from the Windows PATH first
+
     """
     # Create a temporary directory
     temp = tempfile.mkdtemp()
