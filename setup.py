@@ -1,8 +1,6 @@
 #!/usr/bin/env python
 
-"""
-Setup script for ArniePye.
-"""
+"""Setup script for ArniePye."""
 
 import sys
 

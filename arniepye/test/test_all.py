@@ -1,8 +1,6 @@
 #!/usr/bin/env python
 
-"""
-Tests for the arniepye package.
-"""
+"""Tests for the arniepye package."""
 
 import unittest
 from mock import patch, Mock
@@ -17,6 +15,7 @@ from arniepye.test import ENV, REASON
 
 @unittest.skipUnless(os.getenv(ENV), REASON)  # pylint: disable=R0904
 class TestCLI(unittest.TestCase):  # pylint: disable=R0904
+
     """Integration tests for the ArniePye CLI."""
 
     def test_main_help(self):
@@ -53,6 +52,7 @@ class TestCLI(unittest.TestCase):  # pylint: disable=R0904
 
 @patch('arniepye.cli._run_serve', Mock(return_value=True))  # pylint: disable=R0904
 class TestLogging(unittest.TestCase):  # pylint: disable=R0904
+
     """Integration tests for the CLI logging."""
 
     def test_verbose_1(self):
@@ -70,6 +70,7 @@ class TestLogging(unittest.TestCase):  # pylint: disable=R0904
 
 @unittest.skipUnless(os.getenv(ENV), REASON)  # pylint: disable=R0904
 class TestMain(unittest.TestCase):  # pylint: disable=R0904
+
     """Integration tests for the ArniePye main entry points."""
 
     @patch('sys.platform', 'win32')
