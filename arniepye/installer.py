@@ -80,7 +80,7 @@ def _set_url():
     for URL in settings.SERVER_URLS + settings.FALLBACK_URLS:
         try:
             logging.debug("testing {0}...".format(URL))
-            request = requests.get(URL)
+            request = requests.get(URL, timeout=5)
             if request.status_code == 200:  # pragma: no cover, integration test, pylint: disable=C0301
                 logging.info("found server: {0}".format(URL))
                 break
