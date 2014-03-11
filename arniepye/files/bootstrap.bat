@@ -17,7 +17,7 @@ set PYWIN27_SITE=http://downloads.sourceforge.net/project/pywin32/pywin32/Build%
 set PYWIN27_FILE=pywin32-218.win32-py2.7.exe
 
 set PY33_SITE=http://www.python.org/ftp/python/3.3.5
-set PY33_FILE=python-3.3.5rc1.msi
+set PY33_FILE=python-3.3.5.msi
 set PYWIN33_SITE=http://downloads.sourceforge.net/project/pywin32/pywin32/Build%%20218
 set PYWIN33_FILE=pywin32-218.win32-py3.3.exe
 
