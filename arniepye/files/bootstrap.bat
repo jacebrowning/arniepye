@@ -11,13 +11,13 @@ set /p version="Desired default Python version 27 or [33]? "
 
 :: Python 2 and 3 installer sites
 
-set PY27_SITE=http://www.python.org/ftp/python/2.7.5
-set PY27_FILE=python-2.7.5.msi
+set PY27_SITE=http://www.python.org/ftp/python/2.7.6
+set PY27_FILE=python-2.7.6.msi
 set PYWIN27_SITE=http://downloads.sourceforge.net/project/pywin32/pywin32/Build%%20218
 set PYWIN27_FILE=pywin32-218.win32-py2.7.exe
 
-set PY33_SITE=http://www.python.org/ftp/python/3.3.2
-set PY33_FILE=python-3.3.2.msi
+set PY33_SITE=http://www.python.org/ftp/python/3.3.5
+set PY33_FILE=python-3.3.5.msi
 set PYWIN33_SITE=http://downloads.sourceforge.net/project/pywin32/pywin32/Build%%20218
 set PYWIN33_FILE=pywin32-218.win32-py3.3.exe
 
