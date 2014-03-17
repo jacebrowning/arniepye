@@ -4,22 +4,22 @@
 
 
 @echo off
-set version=33
-set /p version="Desired default Python version 27 or [33]? "
+set version=34
+set /p version="Desired default Python version 27 or [34]? "
 @echo on
 
 
 :: Python 2 and 3 installer sites
 
-set PY27_SITE=http://www.python.org/ftp/python/2.7.6
+set PY27_SITE=http://legacy.python.org/ftp/python/2.7.6
 set PY27_FILE=python-2.7.6.msi
 set PYWIN27_SITE=http://downloads.sourceforge.net/project/pywin32/pywin32/Build%%20218
 set PYWIN27_FILE=pywin32-218.win32-py2.7.exe
 
-set PY33_SITE=http://www.python.org/ftp/python/3.3.5
-set PY33_FILE=python-3.3.5.msi
-set PYWIN33_SITE=http://downloads.sourceforge.net/project/pywin32/pywin32/Build%%20218
-set PYWIN33_FILE=pywin32-218.win32-py3.3.exe
+set PY34_SITE=http://legacy.python.org/ftp/python/3.4.0/
+set PY34_FILE=python-3.4.0.msi
+set PYWIN34_SITE=http://downloads.sourceforge.net/project/pywin32/pywin32/Build%%20218
+set PYWIN34_FILE=pywin32-218.win32-py3.4.exe
 
 set BOOTSTRAP_URL=http://{ADDRESS}/packages/bootstrap/bootstrap.py
 set BOOTSTRAP_FILE=bootstrap.py
@@ -29,8 +29,8 @@ set BOOTSTRAP_FILE=bootstrap.py
 set PY27_URL=%PY27_SITE%/%PY27_FILE%
 set PYWIN27_URL=%PYWIN27_SITE%/%PYWIN27_FILE%
 
-set PY33_URL=%PY33_SITE%/%PY33_FILE%
-set PYWIN33_URL=%PYWIN33_SITE%/%PYWIN33_FILE%
+set PY34_URL=%PY34_SITE%/%PY34_FILE%
+set PYWIN34_URL=%PYWIN34_SITE%/%PYWIN34_FILE%
 
 
 ::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
@@ -52,16 +52,16 @@ if exist %PYWIN27_FILE% (
     bitsadmin /transfer Python27-PyWin32 /download /priority normal %PYWIN27_URL% %TEMP%\%PYWIN27_FILE%
 )
 
-if exist %PY33_FILE% (
-    @echo Already download: %PY33_FILE%
+if exist %PY34_FILE% (
+    @echo Already download: %PY34_FILE%
 ) else (
-    bitsadmin /transfer Python33 /download /priority normal %PY33_URL% %TEMP%\%PY33_FILE%
+    bitsadmin /transfer Python34 /download /priority normal %PY34_URL% %TEMP%\%PY34_FILE%
 )
 
-if exist %PYWIN33_FILE% (
-    @echo Already download: %PYWIN33_FILE%
+if exist %PYWIN34_FILE% (
+    @echo Already download: %PYWIN34_FILE%
 ) else (
-    bitsadmin /transfer Python33-PyWin32 /download /priority normal %PYWIN33_URL% %TEMP%\%PYWIN33_FILE%
+    bitsadmin /transfer Python34-PyWin32 /download /priority normal %PYWIN34_URL% %TEMP%\%PYWIN34_FILE%
 )
 
 
@@ -71,8 +71,8 @@ msiexec /i %PY27_FILE%
 start %PYWIN27_FILE%
 pause
 
-msiexec /i %PY33_FILE%
-start %PYWIN33_FILE%
+msiexec /i %PY34_FILE%
+start %PYWIN34_FILE%
 pause
 
 
@@ -85,9 +85,9 @@ bitsadmin /transfer ArniePye /download /priority normal %BOOTSTRAP_URL% %TEMP%\%
 
 if %version% == 27 (
     C:\Python27\python %BOOTSTRAP_FILE% --clear
-    C:\Python33\python %BOOTSTRAP_FILE%
+    C:\Python34\python %BOOTSTRAP_FILE%
 ) else (
-    C:\Python33\python %BOOTSTRAP_FILE% --clear
+    C:\Python34\python %BOOTSTRAP_FILE% --clear
     C:\Python27\python %BOOTSTRAP_FILE%
 )
 
