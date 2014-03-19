@@ -1,8 +1,8 @@
 Changelog
 =========
 
-0.3 (dev)
-------------------
+0.3 (2014/03/19)
+----------------
 
 - Updated from jacebrowning/template-pyhton
 - Bumped bootstrap.bat Python versions to 2.7.6 and 3.3.5
