@@ -5,8 +5,9 @@ Changelog
 ------------------
 
 - Updated from jacebrowning/template-pyhton
-- Bumped bootstrap.bat Python versions to 2.7.6 and 3.3.4
+- Bumped bootstrap.bat Python versions to 2.7.6 and 3.3.5
 - Explicity using 'pip==1.5.2' and 'virtualenv==1.10' in bootstrap.py
+- Python's FTP location changed to "legacy.python.org"
 
 
 0.2.2 (2014/02/07)
