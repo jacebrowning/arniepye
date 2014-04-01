@@ -1,5 +1,10 @@
 ::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
+:: 
 :: Bootstaps a Python 2 and 3 installation + package management on Windows.
+::
+:: To run outside of the local network, manually download boostrap.py to the
+:: same directory as this file before running this file.
+:: 
 ::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
 
 
@@ -38,7 +43,7 @@ set PYWIN33_URL=%PYWIN33_SITE%/%PYWIN33_FILE%
 
 :: Download installers
 
-cd %TEMP%
+pushd %TEMP%
 
 if exist %PY27_FILE% (
     @echo Already download: %PY27_FILE%
@@ -76,9 +81,15 @@ start %PYWIN33_FILE%
 pause
 
 
-:: Download bootstrap
+:: Download bootstrap.py
 
-bitsadmin /transfer ArniePye /download /priority normal %BOOTSTRAP_URL% %TEMP%\%BOOTSTRAP_FILE%
+popd
+
+if exist %BOOTSTRAP_FILE% (
+    @echo Already download: %BOOTSTRAP_FILE%
+) else (
+    bitsadmin /transfer ArniePye /download /priority normal %BOOTSTRAP_URL% %BOOTSTRAP_FILE%)
+)
 
 
 :: Bootstrap ArniePye
