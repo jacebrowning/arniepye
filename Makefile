@@ -229,7 +229,7 @@ demo2: serve
 	@echo !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
 .PHONY: serve
-serve: develop
+serve: env
 
 	# Start a local PyPI server in the background
 	$(BIN)/arnie serve --temp --verbose &
