@@ -88,7 +88,7 @@ popd
 if exist %BOOTSTRAP_FILE% (
     @echo Already download: %BOOTSTRAP_FILE%
 ) else (
-    bitsadmin /transfer ArniePye /download /priority normal %BOOTSTRAP_URL% %BOOTSTRAP_FILE%)
+    bitsadmin /transfer ArniePye /download /priority normal %BOOTSTRAP_URL% %BOOTSTRAP_FILE%
 )
 
 
