@@ -1,10 +1,10 @@
 ::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
-:: 
+::
 :: Bootstaps a Python 2 and 3 installation + package management on Windows.
 ::
 :: To run outside of the local network, manually download boostrap.py to the
 :: same directory as this file before running this file.
-:: 
+::
 ::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
 
 
@@ -27,7 +27,7 @@ set PYWIN33_SITE=http://downloads.sourceforge.net/project/pywin32/pywin32/Build%
 set PYWIN33_FILE=pywin32-218.win32-py3.3.exe
 
 set BOOTSTRAP_URL=http://{ADDRESS}/packages/bootstrap/bootstrap.py
-set BOOTSTRAP_FILE=bootstrap.py
+set BOOTSTRAP_FILE=%CD%/bootstrap.py
 
 :: Build full URLs and download paths
 
