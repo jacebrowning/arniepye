@@ -195,7 +195,7 @@ demo: serve
 	# installs ArniePye into a new virtualenv.
 
 	# Create a temporary virtualenv for the demo and bootstrap ArniePye
-	- virtualenv --python $(VERSION) demo ; cd demo ;\
+	- virtualenv --python $(SYS_PYTHON) demo ; cd demo ;\
 	wget http://127.0.0.1:8080/packages/bootstrap/bootstrap.py ;\
 	Scripts/python.exe bootstrap.py
 

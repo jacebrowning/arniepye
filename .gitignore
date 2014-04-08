@@ -31,3 +31,7 @@ dist
 
 # Sublime Text
 *.sublime-workspace
+
+# Demo
+demo
+demo2
