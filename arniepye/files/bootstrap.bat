@@ -69,18 +69,6 @@ if exist %PYWIN33_FILE% (
     bitsadmin /transfer Python33-PyWin32 /download /priority normal %PYWIN33_URL% %TEMP%\%PYWIN33_FILE%
 )
 
-
-:: Run the installers
-
-msiexec /i %PY27_FILE%
-start %PYWIN27_FILE%
-pause
-
-msiexec /i %PY33_FILE%
-start %PYWIN33_FILE%
-pause
-
-
 :: Download bootstrap.py
 
 popd
@@ -91,8 +79,21 @@ if exist %BOOTSTRAP_FILE% (
     bitsadmin /transfer ArniePye /download /priority normal %BOOTSTRAP_URL% %BOOTSTRAP_FILE%
 )
 
+:: Intall Python and Windows Extensions
+
+pushd %TEMP%
+
+msiexec /i %PY27_FILE%
+start %PYWIN27_FILE%
+pause
+
+msiexec /i %PY33_FILE%
+start %PYWIN33_FILE%
+pause
 
 :: Bootstrap ArniePye
+
+popd
 
 if %version% == 27 (
     C:\Python27\python %BOOTSTRAP_FILE% --clear

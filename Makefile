@@ -132,7 +132,7 @@ ci: pep8 pep257 test tests
 # Cleanup ####################################################################
 
 .PHONY: clean
-clean: .clean-dist .clean-test .clean-doc .clean-build
+clean: .clean-dist .clean-test .clean-doc .clean-build .clean-demo
 
 .PHONY: clean-all
 clean-all: clean .clean-env
@@ -158,6 +158,9 @@ clean-all: clean .clean-env
 .PHONY: .clean-dist
 .clean-dist:
 	rm -rf dist build
+
+.PHONY: .clean-demo
+	rm -rf demo*
 
 # Release ####################################################################
 
@@ -189,7 +192,7 @@ dev:
 # Demo #######################################################################
 
 .PHONY: demo
-demo: serve
+demo: .clean-demo serve
 
 	# This demo starts a local server and verifies that bootstrap.py
 	# installs ArniePye into a new virtualenv.
@@ -211,7 +214,7 @@ demo: serve
 	@echo !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
 .PHONY: demo2
-demo2: serve
+demo2: .clean-demo serve
 
 	# This demo starts a local server and verifies that bootstrap.bat
 	# installs Python 2 and 3 then runs bootstrap.py.
