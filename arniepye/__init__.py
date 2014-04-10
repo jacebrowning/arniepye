@@ -3,7 +3,7 @@
 """Package for ArniePye."""
 
 __project__ = 'ArniePye'
-__version__ = '0.3.1-dev'
+__version__ = '0.3.1'
 
 CLI = 'arnie'
 VERSION = __project__ + '-' + __version__
