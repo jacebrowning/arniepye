@@ -132,7 +132,7 @@ ci: pep8 pep257 test tests
 # Cleanup ####################################################################
 
 .PHONY: clean
-clean: .clean-dist .clean-test .clean-doc .clean-build
+clean: .clean-dist .clean-test .clean-doc .clean-build .clean-demo
 
 .PHONY: clean-all
 clean-all: clean .clean-env
@@ -158,6 +158,10 @@ clean-all: clean .clean-env
 .PHONY: .clean-dist
 .clean-dist:
 	rm -rf dist build
+
+.PHONY: .clean-demo
+.clean-demo:
+	rm -rf demo*
 
 # Release ####################################################################
 
@@ -189,15 +193,15 @@ dev:
 # Demo #######################################################################
 
 .PHONY: demo
-demo: serve
+demo: .clean-demo serve
 
 	# This demo starts a local server and verifies that bootstrap.py
 	# installs ArniePye into a new virtualenv.
 
 	# Create a temporary virtualenv for the demo and bootstrap ArniePye
-	- virtualenv --python $(VERSION) demo ; cd demo ;\
+	- virtualenv --python $(SYS_PYTHON) demo/env ; cd demo ;\
 	wget http://127.0.0.1:8080/packages/bootstrap/bootstrap.py ;\
-	Scripts/python.exe bootstrap.py
+	$(PYTHON) bootstrap.py
 
 	# Use 'arnie' to install and uninstall another package
 	- demo/Scripts/arnie install testpackage
@@ -211,7 +215,7 @@ demo: serve
 	@echo !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
 .PHONY: demo2
-demo2: serve
+demo2: .clean-demo serve
 
 	# This demo starts a local server and verifies that bootstrap.bat
 	# installs Python 2 and 3 then runs bootstrap.py.
@@ -229,7 +233,7 @@ demo2: serve
 	@echo !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
 .PHONY: serve
-serve: develop
+serve: env
 
 	# Start a local PyPI server in the background
 	$(BIN)/arnie serve --temp --verbose &

@@ -1,6 +1,12 @@
 Changelog
 =========
 
+0.3.1 (dev)
+-----------
+
+- Fixed Windows install error by removing pip dependency
+- bootstrap.py is now downloaded to the current directory for offsite support
+
 0.3 (2014/03/19)
 ----------------
 

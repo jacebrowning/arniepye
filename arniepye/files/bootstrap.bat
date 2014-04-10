@@ -1,10 +1,10 @@
 ::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
-:: 
+::
 :: Bootstaps a Python 2 and 3 installation + package management on Windows.
 ::
 :: To run outside of the local network, manually download boostrap.py to the
 :: same directory as this file before running this file.
-:: 
+::
 ::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
 
 
@@ -27,7 +27,7 @@ set PYWIN33_SITE=http://downloads.sourceforge.net/project/pywin32/pywin32/Build%
 set PYWIN33_FILE=pywin32-218.win32-py3.3.exe
 
 set BOOTSTRAP_URL=http://{ADDRESS}/packages/bootstrap/bootstrap.py
-set BOOTSTRAP_FILE=bootstrap.py
+set BOOTSTRAP_FILE=%CD%/bootstrap.py
 
 :: Build full URLs and download paths
 
@@ -69,8 +69,19 @@ if exist %PYWIN33_FILE% (
     bitsadmin /transfer Python33-PyWin32 /download /priority normal %PYWIN33_URL% %TEMP%\%PYWIN33_FILE%
 )
 
+:: Download bootstrap.py
 
-:: Run the installers
+popd
+
+if exist %BOOTSTRAP_FILE% (
+    @echo Already download: %BOOTSTRAP_FILE%
+) else (
+    bitsadmin /transfer ArniePye /download /priority normal %BOOTSTRAP_URL% %BOOTSTRAP_FILE%
+)
+
+:: Intall Python and Windows Extensions
+
+pushd %TEMP%
 
 msiexec /i %PY27_FILE%
 start %PYWIN27_FILE%
@@ -80,19 +91,9 @@ msiexec /i %PY33_FILE%
 start %PYWIN33_FILE%
 pause
 
-
-:: Download bootstrap.py
+:: Bootstrap ArniePye
 
 popd
-
-if exist %BOOTSTRAP_FILE% (
-    @echo Already download: %BOOTSTRAP_FILE%
-) else (
-    bitsadmin /transfer ArniePye /download /priority normal %BOOTSTRAP_URL% %BOOTSTRAP_FILE%)
-)
-
-
-:: Bootstrap ArniePye
 
 if %version% == 27 (
     C:\Python27\python %BOOTSTRAP_FILE% --clear
