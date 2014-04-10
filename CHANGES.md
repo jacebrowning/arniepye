@@ -1,6 +1,11 @@
 Changelog
 =========
 
+0.3.2 (2014/04/10)
+------------------
+
+- Fixed serve high CPU utilization due to busy wait loop
+
 0.3.1 (2014/04/10)
 ------------------
 
