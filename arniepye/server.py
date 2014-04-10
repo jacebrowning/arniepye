@@ -26,8 +26,8 @@ def run(port=8080, path=settings.PACKAGES_DIR, forever=True, temp=False):
     process = _pypiserver(port, path)
     try:
         logging.debug("pypi server started")
-        while process.poll() is None and forever:
-            pass
+        if process.poll() is None and forever:
+            process.wait()
     except KeyboardInterrupt:
         logging.warning("pypi manually terminated")
         return False
@@ -45,7 +45,9 @@ def _pypiserver(port, path):
     args = [sys.executable, '-m', 'pypiserver', '-p', str(port),
             '-P', settings.HTACCESS, path]
     logging.debug("$ {0}".format(' '.join(args)))
-    return subprocess.Popen(args)
+    process = subprocess.Popen(args)
+    logging.debug("pid: {0}".format(process.pid))
+    return process
 
 
 def _setup(path, port):

@@ -8,7 +8,6 @@ from mock import patch, Mock
 import os
 import shutil
 import tempfile
-import subprocess
 
 from arniepye import server
 
@@ -36,17 +35,10 @@ class TestRun(unittest.TestCase):  # pylint: disable=R0904
         """Verify the server process can exit normally."""
         self.assertTrue(server.run(path=self.temp))
 
+    @patch('subprocess.Popen.wait', Mock(side_effect=KeyboardInterrupt))
     def test_serve_interrupt(self):
         """Verify the server can be interrupted."""
-        def side_effect(*args):  # pylint: disable=W0613
-            """First call: return None."""
-            def second_call(*args):  # pylint: disable=W0613
-                """Second call: raise KeyboardInterrupt."""
-                raise KeyboardInterrupt()
-            subprocess.Popen.poll.side_effect = second_call
-            return None
-        with patch('subprocess.Popen.poll', Mock(side_effect=side_effect)):
-            self.assertFalse(server.run(path=self.temp))
+        self.assertFalse(server.run(path=self.temp))
 
 
 if __name__ == '__main__':  # pragma: no cover, manual test
