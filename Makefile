@@ -1,9 +1,9 @@
-PROJECT := ArniePye
-PACKAGE := arniepye
-SOURCES := Makefile setup.py
+PROJECT := $(patsubst ./%.sublime-project,%, $(shell find . -type f -name '*.sublime-p*'))
+PACKAGE := $(patsubst ./%/__init__.py,%, $(shell find . -maxdepth 2 -name '__init__.py'))
+SOURCES := Makefile setup.py $(shell find $(PACKAGE) -name '*.py')
 
 ENV := env
-DEPENTS_CI := $(ENV)/.depends.ci
+DEPENDS_CI := $(ENV)/.depends.ci
 DEPENDS_DEV := $(ENV)/.depends.dev
 EGG_INFO := $(subst -,_,$(PROJECT)).egg-info
 
@@ -13,8 +13,8 @@ ifneq ($(findstring win32, $(PLATFORM)), )
 	SYS_PYTHON := C:\\Python33\\python.exe
 	SYS_VIRTUALENV := C:\\Python33\\Scripts\\virtualenv.exe
 	BIN := $(ENV)/Scripts
-	EXE := .exe
 	OPEN := cmd /c start
+	BAT := .bat
 	# https://bugs.launchpad.net/virtualenv/+bug/449537
 	export TCL_LIBRARY=C:\\Python33\\tcl\\tcl8.5
 else
@@ -31,16 +31,17 @@ endif
 MAN := man
 SHARE := share
 
-PYTHON := $(BIN)/python$(EXE)
-PIP := $(BIN)/pip$(EXE)
+PYTHON := $(BIN)/python
+PIP := $(BIN)/pip
 RST2HTML := $(BIN)/rst2html.py
 PDOC := $(BIN)/pdoc
-PEP8 := $(BIN)/pep8$(EXE)
+PEP8 := $(BIN)/pep8
 PEP257 := $(BIN)/pep257
-PYLINT := $(BIN)/pylint$(EXE)
-NOSE := $(BIN)/nosetests$(EXE)
+PYLINT := $(BIN)/pylint
+PYREVERSE := $(BIN)/pyreverse$(BAT)
+NOSE := $(BIN)/nosetests
 
-# Installation ###############################################################
+# Development Installation ###################################################
 
 .PHONY: all
 all: env
@@ -60,10 +61,10 @@ $(PIP):
 depends: .depends-ci .depends-dev
 
 .PHONY: .depends-ci
-.depends-ci: .virtualenv Makefile $(DEPENTS_CI)
-$(DEPENTS_CI): Makefile
+.depends-ci: .virtualenv Makefile $(DEPENDS_CI)
+$(DEPENDS_CI): Makefile
 	$(PIP) install pep8 pep257 nose coverage
-	touch $(DEPENTS_CI)  # flag to indicate dependencies are installed
+	touch $(DEPENDS_CI)  # flag to indicate dependencies are installed
 
 .PHONY: .depends-dev
 .depends-dev: .virtualenv Makefile $(DEPENDS_DEV)
@@ -74,10 +75,10 @@ $(DEPENDS_DEV): Makefile
 # Documentation ##############################################################
 
 .PHONY: doc
-doc: readme apidocs
+doc: readme apidocs uml
 
 .PHONY: readme
-readme: .depends-ci docs/README-github.html docs/README-pypi.html
+readme: .depends-dev docs/README-github.html docs/README-pypi.html
 docs/README-github.html: README.md
 	pandoc -f markdown_github -t html -o docs/README-github.html README.md
 docs/README-pypi.html: README.rst
@@ -89,6 +90,13 @@ README.rst: README.md
 apidocs: .depends-ci apidocs/$(PACKAGE)/index.html
 apidocs/$(PACKAGE)/index.html: $(SOURCES)
 	$(PYTHON) $(PDOC) --html --overwrite $(PACKAGE) --html-dir apidocs
+
+.PHONY: uml
+uml: .depends-dev docs/*.png $(SOURCES)
+docs/*.png:
+	$(PYREVERSE) $(PACKAGE) -p $(PACKAGE) -f ALL -o png --ignore test
+	- mv -f classes_$(PACKAGE).png docs/classes.png
+	- mv -f packages_$(PACKAGE).png docs/packages.png
 
 .PHONY: read
 read: doc
@@ -104,7 +112,7 @@ pep8: env .depends-ci
 
 .PHONY: pep257
 pep257: env .depends-ci
-	$(PEP257) $(PACKAGE) --ignore=E501
+	$(PEP257) $(PACKAGE) --ignore=E501,D102
 
 .PHONY: pylint
 pylint: env .depends-dev
@@ -149,7 +157,7 @@ clean-all: clean .clean-env
 
 .PHONY: .clean-doc
 .clean-doc:
-	rm -rf apidocs docs/README*.html README.rst
+	rm -rf apidocs docs/README*.html README.rst docs/*.png
 
 .PHONY: .clean-test
 .clean-test:
@@ -179,16 +187,27 @@ clean-all: clean .clean-env
 .PHONY: dist
 dist: .git-no-changes env depends check test tests doc
 	$(PYTHON) setup.py sdist
+	$(PYTHON) setup.py bdist_wheel
 	$(MAKE) read
 
 .PHONY: upload
 upload: .git-no-changes env depends doc
 	$(PYTHON) setup.py sdist upload -r arnie
-	$(MAKE) dev  # restore the development environment
+	$(PYTHON) setup.py bdist_wheel upload -r arnie
 
-.PHONY: dev
-dev:
+# System Installation ########################################################
+
+.PHONY: develop
+develop:
 	python setup.py develop
+
+.PHONY: install
+install:
+	python setup.py install
+
+.PHONY: download
+download:
+	pip install $(PROJECT)
 
 # Demo #######################################################################
 
