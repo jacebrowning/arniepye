@@ -160,6 +160,7 @@ clean-all: clean .clean-env
 	rm -rf dist build
 
 .PHONY: .clean-demo
+.clean-demo:
 	rm -rf demo*
 
 # Release ####################################################################
@@ -198,9 +199,9 @@ demo: .clean-demo serve
 	# installs ArniePye into a new virtualenv.
 
 	# Create a temporary virtualenv for the demo and bootstrap ArniePye
-	- virtualenv --python $(SYS_PYTHON) demo ; cd demo ;\
+	- virtualenv --python $(SYS_PYTHON) demo/env ; cd demo ;\
 	wget http://127.0.0.1:8080/packages/bootstrap/bootstrap.py ;\
-	Scripts/python.exe bootstrap.py
+	$(PYTHON) bootstrap.py
 
 	# Use 'arnie' to install and uninstall another package
 	- demo/Scripts/arnie install testpackage
