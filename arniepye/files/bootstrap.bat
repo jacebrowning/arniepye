@@ -1,5 +1,10 @@
 ::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
-:: Bootstaps a Python 2 and 3 installation + package management on Windows.
+::
+:: Bootstraps a Python 2 and 3 installation + package management on Windows.
+::
+:: To run outside of the local network, manually download bootstrap.py to the
+:: same directory as this file before running this file.
+::
 ::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
 
 
@@ -22,7 +27,7 @@ set PYWIN34_SITE=http://downloads.sourceforge.net/project/pywin32/pywin32/Build%
 set PYWIN34_FILE=pywin32-218.win32-py3.4.exe
 
 set BOOTSTRAP_URL=http://{ADDRESS}/packages/bootstrap/bootstrap.py
-set BOOTSTRAP_FILE=bootstrap.py
+set BOOTSTRAP_FILE=%CD%/bootstrap.py
 
 :: Build full URLs and download paths
 
@@ -38,7 +43,7 @@ set PYWIN34_URL=%PYWIN34_SITE%/%PYWIN34_FILE%
 
 :: Download installers
 
-cd %TEMP%
+pushd %TEMP%
 
 if exist %PY27_FILE% (
     @echo Already download: %PY27_FILE%
@@ -64,8 +69,19 @@ if exist %PYWIN34_FILE% (
     bitsadmin /transfer Python34-PyWin32 /download /priority normal %PYWIN34_URL% %TEMP%\%PYWIN34_FILE%
 )
 
+:: Download bootstrap.py
 
-:: Run the installers
+popd
+
+if exist %BOOTSTRAP_FILE% (
+    @echo Already download: %BOOTSTRAP_FILE%
+) else (
+    bitsadmin /transfer ArniePye /download /priority normal %BOOTSTRAP_URL% %BOOTSTRAP_FILE%
+)
+
+:: Install Python and Windows Extensions
+
+pushd %TEMP%
 
 msiexec /i %PY27_FILE%
 start %PYWIN27_FILE%
@@ -75,13 +91,9 @@ msiexec /i %PY34_FILE%
 start %PYWIN34_FILE%
 pause
 
-
-:: Download bootstrap
-
-bitsadmin /transfer ArniePye /download /priority normal %BOOTSTRAP_URL% %TEMP%\%BOOTSTRAP_FILE%
-
-
 :: Bootstrap ArniePye
+
+popd
 
 if %version% == 27 (
     C:\Python27\python %BOOTSTRAP_FILE% --clear

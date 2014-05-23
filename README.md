@@ -19,8 +19,11 @@ Getting Started
 Requirements
 ------------
 
-* a Windows computer
-* or, an existing Python 2 or 3 installation
+* Windows
+
+    or
+
+* an existing Python 2 or 3 installation
 
 
 Installation
