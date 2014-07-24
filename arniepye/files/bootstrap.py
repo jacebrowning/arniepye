@@ -44,7 +44,7 @@ PIP = os.path.join(BIN, 'pip')
 SERVER_URL = 'http://{ADDRESS}/simple/'  # set dynamically on the server
 ARNIE = os.path.join(BIN, 'arnie3' if IS_PYTHON3 else 'arnie2')
 
-LIB_URL = "https://github.com/dornerworks/arniepye/blob/binary-installers/lib/" # TODO: change this to 'master'
+LIB_URL = "https://github.com/dornerworks/arniepye/blob/binary-installers/lib/"  # TODO: change this to 'master'
 
 GTK_URL = LIB_URL + "pygtk-all-in-one-2.24.0.win32-py2.7.msi"
 if IS_PYTHON3:
