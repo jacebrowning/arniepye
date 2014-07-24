@@ -1,11 +1,11 @@
 language: python
 python:
-  - 3.2
-  - 3.3
-  - 3.4
+- 3.2
+- 3.3
+- 3.4
 install:
-  - pip install coveralls scrutinizer-ocular
+- pip install coveralls scrutinizer-ocular
 script: make ci
 after_success:
-  - coveralls
-  - ocular
+- coveralls
+- ocular

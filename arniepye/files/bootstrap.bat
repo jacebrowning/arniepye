@@ -1,8 +1,8 @@
 ::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
 ::
-:: Bootstaps a Python 2 and 3 installation + package management on Windows.
+:: Bootstraps a Python 2 and 3 installation + package management on Windows.
 ::
-:: To run outside of the local network, manually download boostrap.py to the
+:: To run outside of the local network, manually download bootstrap.py to the
 :: same directory as this file before running this file.
 ::
 ::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
@@ -79,7 +79,7 @@ if exist %BOOTSTRAP_FILE% (
     bitsadmin /transfer ArniePye /download /priority normal %BOOTSTRAP_URL% %BOOTSTRAP_FILE%
 )
 
-:: Intall Python and Windows Extensions
+:: Install Python and Windows Extensions
 
 pushd %TEMP%
 

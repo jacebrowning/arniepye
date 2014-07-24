@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 
 """
-Bootstaps package management in an existing Python 2 or 3 installation.
+Bootstraps package management in an existing Python 2 or 3 installation.
 
 After running this script, install packages using 'arnie':
 
