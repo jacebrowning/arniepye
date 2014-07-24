@@ -142,7 +142,7 @@ def run(clear=False):
 
     # Install non-pip-installable packages
     msiexec(download(locate(GTK_URL)))
-    call(download(locate(GSVN_URL)))
+    call(download(locate(SVN_URL)))
 
     # Delete the temporary directory
     os.chdir(os.path.dirname(temp))
