@@ -44,17 +44,18 @@ PIP = os.path.join(BIN, 'pip')
 SERVER_URL = 'http://{ADDRESS}/simple/'  # set dynamically on the server
 ARNIE = os.path.join(BIN, 'arnie3' if IS_PYTHON3 else 'arnie2')
 
-LIB_URL = "https://github.com/dornerworks/arniepye/blob/binary-installers/lib/"  # TODO: change this to 'master'
+BOOTSTRAP_URL = "http://{ADDRESS}/packages/bootstrap/"
+GITHUB_URL = "https://github.com/dornerworks/arniepye/blob/binary-installers/arniepye/files/"  # TODO: change this to 'master'
 
-GTK_URL = LIB_URL + "pygtk-all-in-one-2.24.0.win32-py2.7.msi"
+GTK_URL = "http://ftp.gnome.org/pub/GNOME/binaries/win32/pygtk/2.24/pygtk-all-in-one-2.24.0.win32-py2.7.msi"  # pylint: disable=C0301
 if IS_PYTHON3:
     GTK_URL = None
 if not IS_WINDOWS:
     GTK_URL = None
 
-SVN_URL = LIB_URL + "py27-pysvn-svn181-1.7.8-1546.exe"
+SVN_URL = "http://pysvn.tigris.org/files/documents/1233/49314/py27-pysvn-svn181-1.7.8-1546.exe"  # pylint: disable=C0301
 if IS_PYTHON3:
-    SVN_URL = LIB_URL + "py33-pysvn-svn181-1.7.8-1546.exe"
+    SVN_URL = "http://pysvn.tigris.org/files/documents/1233/49326/py33-pysvn-svn181-1.7.8-1546.exe"  # pylint: disable=C0301
 if not IS_WINDOWS:
     SVN_URL = None
 
@@ -140,8 +141,8 @@ def run(clear=False):
     arnie(*ESSENTIALS)
 
     # Install non-pip-installable packages
-    msiexec(download(GTK_URL))
-    call(download(SVN_URL))
+    msiexec(download(locate(GTK_URL)))
+    call(download(locate(GSVN_URL)))
 
     # Delete the temporary directory
     os.chdir(os.path.dirname(temp))
@@ -194,12 +195,32 @@ def update_paths(clear):
         env.set('PATH', ';'.join(paths))
 
 
+def locate(url):
+    """Determine if a local URL is available for download."""
+    if url is None:
+        return
+    logging.debug("locating {0}...".format(url))
+    filename = url.rsplit('/')[-1]
+    local_url = BOOTSTRAP_URL + filename
+    github_url = GITHUB_URL + filename
+
+    for path in (local_url, github_url, url):
+        response = requests.head(path)
+        if reponse.status_code == requests.codes.ok:
+            logging.debug("found: {0}...".format(path))
+            return path
+
+    logging.warning("unknown URL: {0}".format(url))
+    return url
+
+
 def download(url, path=None):
     """Download a file from the URL to a local path."""
     if url is None:
         return
+    filename = url.rsplit('/')[-1]
     if path is None:
-        path = os.path.join(os.getcwd(), url.rsplit('/')[-1])
+        path = os.path.join(os.getcwd(), filename)
     logging.debug("downloading {0} to {1}...".format(url, path))
 
     if IS_PYTHON3:
