@@ -44,15 +44,17 @@ PIP = os.path.join(BIN, 'pip')
 SERVER_URL = 'http://{ADDRESS}/simple/'  # set dynamically on the server
 ARNIE = os.path.join(BIN, 'arnie3' if IS_PYTHON3 else 'arnie2')
 
-GTK_URL = "http://ftp.gnome.org/pub/GNOME/binaries/win32/pygtk/2.24/pygtk-all-in-one-2.24.0.win32-py2.7.msi"  # pylint: disable=C0301
+LIB_URL = "https://github.com/dornerworks/arniepye/blob/binary-installers/lib/" # TODO: change this to 'master'
+
+GTK_URL = LIB_URL + "pygtk-all-in-one-2.24.0.win32-py2.7.msi"
 if IS_PYTHON3:
     GTK_URL = None
 if not IS_WINDOWS:
     GTK_URL = None
 
-SVN_URL = "http://pysvn.tigris.org/files/documents/1233/49314/py27-pysvn-svn181-1.7.8-1546.exe"  # pylint: disable=C0301
+SVN_URL = LIB_URL + "py27-pysvn-svn181-1.7.8-1546.exe"
 if IS_PYTHON3:
-    SVN_URL = "http://pysvn.tigris.org/files/documents/1233/49326/py33-pysvn-svn181-1.7.8-1546.exe"  # pylint: disable=C0301
+    SVN_URL = LIB_URL + "py33-pysvn-svn181-1.7.8-1546.exe"
 if not IS_WINDOWS:
     SVN_URL = None
 
