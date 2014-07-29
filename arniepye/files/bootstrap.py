@@ -66,7 +66,7 @@ if IS_WINDOWS:
     else:
         import _winreg as winreg  # pylint: disable=F0401
 
-ESSENTIALS = 'pep8', 'pylint', 'nose', 'coverage'
+ESSENTIALS = 'pep8', 'pylint', 'nose', 'coverage', 'requests'
 
 
 # http://code.activestate.com/recipes/577621-manage-environment-variables-on-windows
@@ -199,6 +199,9 @@ def locate(url):
     """Determine if a local URL is available for download."""
     if url is None:
         return
+
+    import requests
+
     logging.debug("locating {0}...".format(url))
     filename = url.rsplit('/')[-1]
     local_url = BOOTSTRAP_URL + filename
@@ -206,7 +209,7 @@ def locate(url):
 
     for path in (local_url, github_url, url):
         response = requests.head(path)
-        if reponse.status_code == requests.codes.ok:
+        if response.status_code == requests.codes.ok:
             logging.debug("found: {0}...".format(path))
             return path
 
