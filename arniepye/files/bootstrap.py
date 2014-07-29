@@ -14,6 +14,8 @@ Or force installation into the site packages of specific Python version:
 
 """
 
+# pylint: disable=C0301
+
 import os
 import sys
 import shutil
@@ -35,7 +37,7 @@ elif IS_WINDOWS:
 else:
     BIN = '/usr/local/bin'
 
-SETUPTOOLS_URL = "https://bitbucket.org/pypa/setuptools/raw/bootstrap/ez_setup.py"  # pylint: disable=C0301
+SETUPTOOLS_URL = "https://bitbucket.org/pypa/setuptools/raw/bootstrap/ez_setup.py"
 EASY_INSTALL = os.path.join(BIN, 'easy_install')
 
 PIP_URL = "https://raw.github.com/pypa/pip/master/contrib/get-pip.py"
@@ -45,17 +47,17 @@ SERVER_URL = 'http://{ADDRESS}/simple/'  # set dynamically on the server
 ARNIE = os.path.join(BIN, 'arnie3' if IS_PYTHON3 else 'arnie2')
 
 BOOTSTRAP_URL = "http://{ADDRESS}/packages/bootstrap/"
-GITHUB_URL = "https://github.com/dornerworks/arniepye/blob/binary-installers/arniepye/files/"  # TODO: change this to 'master'
+GITHUB_URL = "https://github.com/dornerworks/arniepye/blob/master/arniepye/files/"
 
-GTK_URL = "http://ftp.gnome.org/pub/GNOME/binaries/win32/pygtk/2.24/pygtk-all-in-one-2.24.0.win32-py2.7.msi"  # pylint: disable=C0301
+GTK_URL = "http://ftp.gnome.org/pub/GNOME/binaries/win32/pygtk/2.24/pygtk-all-in-one-2.24.0.win32-py2.7.msi"
 if IS_PYTHON3:
     GTK_URL = None
 if not IS_WINDOWS:
     GTK_URL = None
 
-SVN_URL = "http://pysvn.tigris.org/files/documents/1233/49314/py27-pysvn-svn181-1.7.8-1546.exe"  # pylint: disable=C0301
+SVN_URL = "http://pysvn.tigris.org/files/documents/1233/49314/py27-pysvn-svn181-1.7.8-1546.exe"
 if IS_PYTHON3:
-    SVN_URL = "http://pysvn.tigris.org/files/documents/1233/49326/py33-pysvn-svn181-1.7.8-1546.exe"  # pylint: disable=C0301
+    SVN_URL = "http://pysvn.tigris.org/files/documents/1233/49326/py33-pysvn-svn181-1.7.8-1546.exe"
 if not IS_WINDOWS:
     SVN_URL = None
 
@@ -83,7 +85,7 @@ class Win32Environment(object):
             self.subkey = 'Environment'
         else:
             self.root = winreg.HKEY_LOCAL_MACHINE
-            self.subkey = r'SYSTEM\CurrentControlSet\Control\Session Manager\Environment'  # pylint: disable=C0301
+            self.subkey = r'SYSTEM\CurrentControlSet\Control\Session Manager\Environment'
 
     def get(self, name):
         """Get an an environment variable."""
