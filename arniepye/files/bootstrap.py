@@ -200,14 +200,12 @@ def locate(url):
     if url is None:
         return
 
-    import requests
+    import requests  # installed as an essential package
 
-    logging.debug("locating {0}...".format(url))
     filename = url.rsplit('/')[-1]
-    local_url = BOOTSTRAP_URL + filename
-    github_url = GITHUB_URL + filename
+    logging.debug("locating {0}...".format(filename))
 
-    for path in (local_url, github_url, url):
+    for path in (BOOTSTRAP_URL + filename, GITHUB_URL + filename, url):
         response = requests.head(path)
         if response.status_code == requests.codes.ok:
             logging.debug("found: {0}...".format(path))
