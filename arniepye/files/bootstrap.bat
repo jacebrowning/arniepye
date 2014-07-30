@@ -16,8 +16,8 @@ set /p version="Desired default Python version 27 or [33]? "
 
 :: Python 2 and 3 installer sites
 
-set PY27_SITE=http://legacy.python.org/ftp/python/2.7.6
-set PY27_FILE=python-2.7.6.msi
+set PY27_SITE=http://legacy.python.org/ftp/python/2.7.8
+set PY27_FILE=python-2.7.8.msi
 set PYWIN27_SITE=http://downloads.sourceforge.net/project/pywin32/pywin32/Build%%20218
 set PYWIN27_FILE=pywin32-218.win32-py2.7.exe
 

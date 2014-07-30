@@ -5,6 +5,7 @@ Changelog
 -----------
 
 - Added copies of binary installers to the server and GitHub
+- Upgraded Python 2.7.6 => 2.7.8
 
 0.3.2 (2014/04/10)
 ------------------
