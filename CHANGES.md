@@ -1,11 +1,16 @@
 Changelog
 =========
 
+0.4 (dev)
+---------
+
+- Upgrade Python 3.3.x to 3.4.1
+
 0.3.3 (2014/07/30)
 ------------------
 
 - Added copies of binary installers to the server and GitHub
-- Upgraded Python 2.7.6 => 2.7.8
+- Upgraded Python 2.7.6 to 2.7.8
 
 0.3.2 (2014/04/10)
 ------------------

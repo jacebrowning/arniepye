@@ -21,8 +21,8 @@ set PY27_FILE=python-2.7.8.msi
 set PYWIN27_SITE=http://downloads.sourceforge.net/project/pywin32/pywin32/Build%%20218
 set PYWIN27_FILE=pywin32-218.win32-py2.7.exe
 
-set PY34_SITE=http://legacy.python.org/ftp/python/3.4.0/
-set PY34_FILE=python-3.4.0.msi
+set PY34_SITE=http://legacy.python.org/ftp/python/3.4.1
+set PY34_FILE=python-3.4.1.msi
 set PYWIN34_SITE=http://downloads.sourceforge.net/project/pywin32/pywin32/Build%%20218
 set PYWIN34_FILE=pywin32-218.win32-py3.4.exe
 
