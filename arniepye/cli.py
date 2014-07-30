@@ -105,7 +105,11 @@ def main(args=None):
     except KeyboardInterrupt:
         logging.debug("manually terminated")
         success = False
-    if not success:
+    logging.debug("manually terminated")
+    if success:
+        logging.debug("command succeeded")
+    else:
+        logging.debug("command failed")
         sys.exit(1)
 
 

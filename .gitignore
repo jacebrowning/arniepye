@@ -11,10 +11,11 @@ Icon*
 env
 
 # Generated documentation
-*.gen.*
+docs/gen
 apidocs
 docs/*.html
 *.rst
+docs/*.png
 
 # Google Drive
 *.gdoc

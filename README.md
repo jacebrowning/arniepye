@@ -1,8 +1,9 @@
 ArniePye
 ========
 
-[![Build Status](https://travis-ci.org/dornerworks/arniepye.png?branch=master)](https://travis-ci.org/dornerworks/arniepye)
-[![Coverage Status](https://coveralls.io/repos/dornerworks/arniepye/badge.png?branch=master)](https://coveralls.io/r/dornerworks/arniepye/?branch=master)
+[![Build Status](http://img.shields.io/travis/dornerworks/arniepye/master.svg)](https://travis-ci.org/dornerworks/arniepye)
+[![Coverage Status](http://img.shields.io/coveralls/dornerworks/arniepye/master.svg)](https://coveralls.io/r/dornerworks/arniepye)
+[![Scrutinizer Code Quality](http://img.shields.io/scrutinizer/g/dornerworks/arniepye.svg)](https://scrutinizer-ci.com/g/dornerworks/arniepye/?branch=master)
 
 ArniePye is a wrapper for `pypiserver` and `pip` to provide an installer
 and server for local and public Python packages. It also provides
@@ -29,23 +30,23 @@ Requirements
 Installation
 ------------
 
-To bootstrap ArniePye, obtain and run `boostrap.py` from a server:
+To bootstrap ArniePye, obtain and run `boostrap.py` from the server:
 
-    wget http://<SERVER>/packages/bootstrap/bootstrap.py
-    python bootstrap.py
+    $ wget http://<SERVER>/packages/bootstrap/bootstrap.py
+    $ python bootstrap.py
 
-If Python is not installed, run `bootstrap.bat` instead:
+If Python is not installed, obtain and run `bootstrap.bat` instead:
 
-    wget http://<SERVER>/packages/bootstrap/bootstrap.bat
-    bootstrap.bat
+    $ wget http://<SERVER>/packages/bootstrap/bootstrap.bat
+    $ bootstrap.bat
 
 ArniePye can be updated with itself after bootstrapping:
 
-    arnie install ArniePye
+    $ arnie install ArniePye
 
 Or directly from the source code:
 
-    python setup.py install
+    $ python setup.py install
 
 
 
@@ -101,7 +102,7 @@ Create a .pypirc in your home directory:
 
 After incrementing the version number of your project, run:
 
-    python setup.py sdist upload -r arnie
+    $ python setup.py sdist upload -r arnie
 
 
 Serving Packages
@@ -109,11 +110,11 @@ Serving Packages
 
 To start a temporary local server (<http://127.0.0.1:8080>), run:
 
-    arnie serve --temp
+    $ arnie serve --temp
 
 The main server (<http://arnie>) is run from an Ubuntu virtual machine:
 
-    sudo arnie serve --port 80
+    $ sudo arnie serve --port 80
 
 
 
@@ -129,6 +130,7 @@ Requirements
     * Linux: http://www.gnu.org/software/make (likely already installed)
 * virtualenv: https://pypi.python.org/pypi/virtualenv#installation
 * Pandoc: http://johnmacfarlane.net/pandoc/installing.html
+* Graphviz: http://www.graphviz.org/Download.php
 
 
 Installation
@@ -136,24 +138,25 @@ Installation
 
 Create a virtualenv:
 
-    make env
+    $ make env
 
 Run the tests:
 
-    make test
-    make tests  # includes integration tests
+    $ make test
+    $ make tests  # includes integration tests
 
 Build the documentation:
 
-    make doc
+    $ make doc
 
 Run static analysis:
 
-    make pep8
-    make pylint
-    make check  # pep8 and pylint
+    $ make pep8
+    $ make pep257
+    $ make pylint
+    $ make check  # includes all checks
 
 Prepare a release:
 
-    make dist  # dry run
-    make upload
+    $ make dist  # dry run
+    $ make upload
