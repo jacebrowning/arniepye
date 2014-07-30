@@ -1,8 +1,8 @@
 Changelog
 =========
 
-0.3.3 (dev)
------------
+0.3.3 (2014/07/30)
+------------------
 
 - Added copies of binary installers to the server and GitHub
 - Upgraded Python 2.7.6 => 2.7.8
