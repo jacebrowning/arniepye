@@ -1,6 +1,6 @@
 # Python settings
 PYTHON_MAJOR := 3
-PYTHON_MINOR := 3
+PYTHON_MINOR := 4
 
 # Project settings (automatically detected from files/directories)
 PROJECT := $(patsubst ./%.sublime-project,%, $(shell find . -type f -name '*.sublime-p*'))

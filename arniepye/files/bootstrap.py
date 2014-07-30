@@ -14,6 +14,8 @@ Or force installation into the site packages of specific Python version:
 
 """
 
+# pylint: disable=C0301
+
 import os
 import sys
 import shutil
@@ -35,7 +37,7 @@ elif IS_WINDOWS:
 else:
     BIN = '/usr/local/bin'
 
-SETUPTOOLS_URL = "https://bitbucket.org/pypa/setuptools/raw/bootstrap/ez_setup.py"  # pylint: disable=C0301
+SETUPTOOLS_URL = "https://bitbucket.org/pypa/setuptools/raw/bootstrap/ez_setup.py"
 EASY_INSTALL = os.path.join(BIN, 'easy_install')
 
 PIP_URL = "https://raw.github.com/pypa/pip/master/contrib/get-pip.py"
@@ -44,15 +46,18 @@ PIP = os.path.join(BIN, 'pip')
 SERVER_URL = 'http://{ADDRESS}/simple/'  # set dynamically on the server
 ARNIE = os.path.join(BIN, 'arnie3' if IS_PYTHON3 else 'arnie2')
 
-GTK_URL = "http://ftp.gnome.org/pub/GNOME/binaries/win32/pygtk/2.24/pygtk-all-in-one-2.24.0.win32-py2.7.msi"  # pylint: disable=C0301
+BOOTSTRAP_URL = "http://{ADDRESS}/packages/bootstrap/"
+GITHUB_URL = "https://github.com/dornerworks/arniepye/blob/master/arniepye/files/"
+
+GTK_URL = "http://ftp.gnome.org/pub/GNOME/binaries/win32/pygtk/2.24/pygtk-all-in-one-2.24.0.win32-py2.7.msi"
 if IS_PYTHON3:
     GTK_URL = None
 if not IS_WINDOWS:
     GTK_URL = None
 
-SVN_URL = "http://pysvn.tigris.org/files/documents/1233/49314/py27-pysvn-svn181-1.7.8-1546.exe"  # pylint: disable=C0301
+SVN_URL = "http://pysvn.tigris.org/files/documents/1233/49314/py27-pysvn-svn181-1.7.8-1546.exe"
 if IS_PYTHON3:
-    SVN_URL = "http://pysvn.tigris.org/files/documents/1233/49326/py33-pysvn-svn181-1.7.8-1546.exe"  # pylint: disable=C0301
+    SVN_URL = "http://pysvn.tigris.org/files/documents/1233/49326/py33-pysvn-svn181-1.7.8-1546.exe"
 if not IS_WINDOWS:
     SVN_URL = None
 
@@ -63,7 +68,7 @@ if IS_WINDOWS:
     else:
         import _winreg as winreg  # pylint: disable=F0401
 
-ESSENTIALS = 'pep8', 'pylint', 'nose', 'coverage'
+ESSENTIALS = 'pep8', 'pylint', 'nose', 'coverage', 'requests'
 
 
 # http://code.activestate.com/recipes/577621-manage-environment-variables-on-windows
@@ -80,7 +85,7 @@ class Win32Environment(object):
             self.subkey = 'Environment'
         else:
             self.root = winreg.HKEY_LOCAL_MACHINE
-            self.subkey = r'SYSTEM\CurrentControlSet\Control\Session Manager\Environment'  # pylint: disable=C0301
+            self.subkey = r'SYSTEM\CurrentControlSet\Control\Session Manager\Environment'
 
     def get(self, name):
         """Get an an environment variable."""
@@ -138,8 +143,8 @@ def run(clear=False):
     arnie(*ESSENTIALS)
 
     # Install non-pip-installable packages
-    msiexec(download(GTK_URL))
-    call(download(SVN_URL))
+    msiexec(download(locate(GTK_URL)))
+    call(download(locate(SVN_URL)))
 
     # Delete the temporary directory
     os.chdir(os.path.dirname(temp))
@@ -192,12 +197,33 @@ def update_paths(clear):
         env.set('PATH', ';'.join(paths))
 
 
+def locate(url):
+    """Determine if a local URL is available for download."""
+    if url is None:
+        return
+
+    import requests  # installed as an essential package
+
+    filename = url.rsplit('/')[-1]
+    logging.debug("locating {0}...".format(filename))
+
+    for path in (BOOTSTRAP_URL + filename, GITHUB_URL + filename, url):
+        response = requests.head(path)
+        if response.status_code == requests.codes.ok:
+            logging.debug("found: {0}...".format(path))
+            return path
+
+    logging.warning("unknown URL: {0}".format(url))
+    return url
+
+
 def download(url, path=None):
     """Download a file from the URL to a local path."""
     if url is None:
         return
+    filename = url.rsplit('/')[-1]
     if path is None:
-        path = os.path.join(os.getcwd(), url.rsplit('/')[-1])
+        path = os.path.join(os.getcwd(), filename)
     logging.debug("downloading {0} to {1}...".format(url, path))
 
     if IS_PYTHON3:

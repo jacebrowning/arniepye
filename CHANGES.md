@@ -1,6 +1,11 @@
 Changelog
 =========
 
+0.3.3 (dev)
+-----------
+
+- Added copies of binary installers to the server and GitHub
+
 0.3.2 (2014/04/10)
 ------------------
 
