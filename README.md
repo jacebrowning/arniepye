@@ -46,6 +46,8 @@ ArniePye can be updated with itself after bootstrapping:
 
 Or directly from the source code:
 
+    $ git clone https://github.com/dornerworks/arniepye.git
+    $ cd arniepye
     $ python setup.py install
 
 
