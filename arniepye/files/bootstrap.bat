@@ -96,11 +96,11 @@ pause
 popd
 
 if %version% == 27 (
-    C:\Python27\python %BOOTSTRAP_FILE% --clear
-    C:\Python33\python %BOOTSTRAP_FILE%
+    runas /user:Administrator C:\Python27\python %BOOTSTRAP_FILE% --clear
+    runas /user:Administrator C:\Python33\python %BOOTSTRAP_FILE%
 ) else (
-    C:\Python33\python %BOOTSTRAP_FILE% --clear
-    C:\Python27\python %BOOTSTRAP_FILE%
+    runas /user:Administrator C:\Python33\python %BOOTSTRAP_FILE% --clear
+    runas /user:Administrator C:\Python27\python %BOOTSTRAP_FILE%
 )
 
 
