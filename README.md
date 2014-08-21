@@ -32,13 +32,13 @@ Installation
 
 To bootstrap ArniePye, obtain and run `boostrap.py` from the server:
 
-    $ wget http://<SERVER>/packages/bootstrap/bootstrap.py
-    $ python bootstrap.py
+1. download: [http://\<SERVER\>/packages/bootstrap/bootstrap.py](http://arnie/packages/bootstrap/bootstrap.py)
+2. `$ python bootstrap.py`
 
 If Python is not installed, obtain and run `bootstrap.bat` instead:
 
-    $ wget http://<SERVER>/packages/bootstrap/bootstrap.bat
-    $ bootstrap.bat
+1. download: [http://\<SERVER\>/packages/bootstrap/bootstrap.bat](http://arnie/packages/bootstrap/bootstrap.bat)
+2. right click on `bootstrap.bat`  > **Run as administrator** 
 
 ArniePye can be updated with itself after bootstrapping:
 
