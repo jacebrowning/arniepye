@@ -1,6 +1,11 @@
 Changelog
 =========
 
+0.3.4 (dev)
+-----------
+
+- Updated instructions to run `bootstrap.bat` as administrator
+
 0.3.3 (2014/07/30)
 ------------------
 
