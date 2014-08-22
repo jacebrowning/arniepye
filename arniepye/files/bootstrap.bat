@@ -107,7 +107,7 @@ if %version% == 27 (
 ::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
 
 
-if %errorlevel% eq 0 goto :end
+if %errorlevel% equ 0 goto :end
 :error
 @echo An error occured during installation.
 pause
