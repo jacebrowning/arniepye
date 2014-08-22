@@ -1,10 +1,11 @@
 Changelog
 =========
 
-0.3.4 (dev)
------------
+0.3.4 (2014/08/22)
+------------------
 
 - Updated instructions to run `bootstrap.bat` as administrator
+- Fixed path quoting and condition check in `bootstrap.bat`
 
 0.3.3 (2014/07/30)
 ------------------
