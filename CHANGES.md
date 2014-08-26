@@ -4,7 +4,7 @@ Changelog
 0.4 (dev)
 ---------
 
-- Upgrade Python 3.3.x to 3.4.1
+- Upgrade Python 3.3.5 to 3.4.1
 
 0.3.4 (2014/08/22)
 ------------------
