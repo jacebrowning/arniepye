@@ -27,7 +27,7 @@ set PYWIN34_SITE=http://downloads.sourceforge.net/project/pywin32/pywin32/Build%
 set PYWIN34_FILE=pywin32-218.win32-py3.4.exe
 
 set BOOTSTRAP_URL=http://{ADDRESS}/packages/bootstrap/bootstrap.py
-set BOOTSTRAP_FILE=%CD%/bootstrap.py
+set BOOTSTRAP_FILE="%CD%/bootstrap.py"
 
 :: Build full URLs and download paths
 
@@ -107,7 +107,7 @@ if %version% == 27 (
 ::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
 
 
-if %errorlevel% eq 0 goto :end
+if %errorlevel% equ 0 goto :end
 :error
 @echo An error occured during installation.
 pause

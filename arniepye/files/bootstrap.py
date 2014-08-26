@@ -40,7 +40,6 @@ else:
 SETUPTOOLS_URL = "https://bitbucket.org/pypa/setuptools/raw/bootstrap/ez_setup.py"
 EASY_INSTALL = os.path.join(BIN, 'easy_install')
 
-PIP_URL = "https://raw.github.com/pypa/pip/master/contrib/get-pip.py"
 PIP = os.path.join(BIN, 'pip')
 
 SERVER_URL = 'http://{ADDRESS}/simple/'  # set dynamically on the server

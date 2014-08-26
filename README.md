@@ -9,8 +9,8 @@ ArniePye is a wrapper for `pypiserver` and `pip` to provide an installer
 and server for local and public Python packages. It also provides
 boostrapping scripts to:
 
--   install itself into a an existing Python
--   install Python (and itself) on a Windows computer from nothing
+-   add itself to an existing Python installaion
+-   install Python on a Windows computer from nothing
 
 
 
@@ -32,13 +32,13 @@ Installation
 
 To bootstrap ArniePye, obtain and run `boostrap.py` from the server:
 
-    $ wget http://<SERVER>/packages/bootstrap/bootstrap.py
-    $ python bootstrap.py
+1. download: [http://\<SERVER\>/packages/bootstrap/bootstrap.py](http://arnie/packages/bootstrap/bootstrap.py)
+2. `$ python bootstrap.py`
 
 If Python is not installed, obtain and run `bootstrap.bat` instead:
 
-    $ wget http://<SERVER>/packages/bootstrap/bootstrap.bat
-    $ bootstrap.bat
+1. download: [http://\<SERVER\>/packages/bootstrap/bootstrap.bat](http://arnie/packages/bootstrap/bootstrap.bat)
+2. right click on `bootstrap.bat`  > **Run as administrator** 
 
 ArniePye can be updated with itself after bootstrapping:
 
@@ -46,6 +46,8 @@ ArniePye can be updated with itself after bootstrapping:
 
 Or directly from the source code:
 
+    $ git clone https://github.com/dornerworks/arniepye.git
+    $ cd arniepye
     $ python setup.py install
 
 
